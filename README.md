@@ -1,6 +1,6 @@
 # Oszust OS Storm Eye | [Oszust Industries](https://github.com/Oszust-Industries)
 
-Oszust OS Storm Eye is a weather app. Get the weather in any city in the world. You can also view the horuly forecast for the selected city.
+Oszust OS Storm Eye is a weather app. Get the weather in any city in the world. You can also view the hourly forecast for the selected city.
 
 Release Date: TBA
 
@@ -11,7 +11,9 @@ Developer: [Oszust Industries](https://github.com/Oszust-Industries)
 
 ## Installation:
 
-Run the setup file, and the software will be installed for you.
+1. Run the setup file
+2. When asked, "Do you want to allow this app to make changes to your device," click Yes.
+3. Done. Enjoy!
 
 ## Requirements:
 
@@ -33,4 +35,4 @@ Run the setup file, and the software will be installed for you.
 
 This software uses [Windows 10 Toast](https://pypi.org/project/win10toast/) package to display notifications on your system.
 
-This software requires a [OpenWeatherMap.org](https://openweathermap.org/) account to get weather data.
+This software requires an [OpenWeatherMap.org](https://openweathermap.org/) account to get weather data.
