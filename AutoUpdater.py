@@ -48,9 +48,10 @@ def OszustOSStormEyeAutoUpdater():
             ## Update Required Files
             filenames = next(walk(appdata+"\\temp\\"+appNameFile+"-Main\\"), (None, None, []))[2]
             for i in filenames:
-                try: os.remove(current+"\\"+i)
-                except: print("FAILED")
-                shutil.move(appdata+"\\temp\\"+appNameFile+"-Main\\" + i, current)
+                if i != "AutoUpdater.py":
+                    try: os.remove(current+"\\"+i)
+                    except: print("FAILED")
+                    shutil.move(appdata+"\\temp\\"+appNameFile+"-Main\\" + i, current)
             ## Clean Update
             shutil.rmtree(appdata+"\\temp")
             if UpdateStatus == -1: UpdateStatus = 1
