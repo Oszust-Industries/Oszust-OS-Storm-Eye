@@ -50,7 +50,7 @@ def OszustOSStormEyeAutoUpdater():
             for i in filenames:
                 if i != "AutoUpdater.py":
                     try: os.remove(current+"\\"+i)
-                    except: print("FAILED")
+                    except: pass
                     shutil.move(appdata+"\\temp\\"+appNameFile+"-Main\\" + i, current)
             ## Clean Update
             shutil.rmtree(appdata+"\\temp")
