@@ -72,6 +72,7 @@ def OszustOSStormEyeSetup():
             else:
                 shutil.rmtree(installLocation)
                 os.makedirs(installLocation)
+            os.system('ICACLS "'+installLocation+'" /grant Users:(OI)(CI)F /T')
             installStatus, installText = 3, "Downloading"
             ## Download Update
             if appBuild.lower() == "main": urllib.request.urlretrieve("https://github.com/Oszust-Industries/"+appNameFile+"/archive/refs/heads/main.zip", str(os.getenv('APPDATA') + "\\Oszust Industries\\temp\\"+appNameDownload+".zip"))
