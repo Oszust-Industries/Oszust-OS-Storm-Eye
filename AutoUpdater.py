@@ -47,6 +47,7 @@ def OszustOSStormEyeAutoUpdater():
             if appBuild.lower() in ["alpha", "beta"]: os.rename(appdata +"\\temp\\"+appNameFile+"-"+appBuild, appdata +"\\temp\\"+appNameFile+"-Main")
             ## Update Required Files
             filenames = next(walk(appdata+"\\temp\\"+appNameFile+"-Main\\"), (None, None, []))[2]
+            os.chmod(current, 0o777)
             for i in filenames:
                 if i != "AutoUpdater.py":
                     try: os.remove(current+"\\"+i)
