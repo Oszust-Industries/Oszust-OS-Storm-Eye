@@ -66,6 +66,7 @@ def OszustOSStormEyeSetup():
             else:
                 shutil.rmtree(appdata + "\\temp")
                 os.mkdir(appdata + "\\temp")
+            os.umask(0)
             if not os.path.exists(os.environ["ProgramFiles"] + "\\Oszust Industries"): os.makedirs(os.environ["ProgramFiles"] + "\\Oszust Industries")
             if not os.path.exists(installLocation): os.makedirs(installLocation)
             else:
@@ -93,7 +94,7 @@ def OszustOSStormEyeSetup():
                 shortcut = shell.CreateShortCut(objShell.SpecialFolders("AllUsersPrograms") + "\\Oszust Industries\\" + appName + ".lnk")
                 shortcut.Targetpath = installLocation + "\\" + appName.replace(" ", "_") + ".py"
                 shortcut.WorkingDirectory = installLocation
-                shortcut.IconLocation = installLocation + "\\OszustOSStormEye.ico"
+                shortcut.IconLocation = installLocation + "\\" + appName.replace(" ", "") + ".ico"
                 shortcut.save()
             except: pass
             installStatus, installText = 8, "Installing Required Packages"
@@ -103,7 +104,6 @@ def OszustOSStormEyeSetup():
                 return
             installStatus, installText = 9, "Finishing Setup"
             ## Clean Update
-            os.chmod(objShell.SpecialFolders("AllUsersPrograms") + "\\Oszust Industries\\" + appName, 0o777)
             shutil.rmtree(appdata + "\\temp")
             installStatus, installText = 10, "Done"
     except Exception as Argument: crashMessage()
