@@ -12,8 +12,10 @@ def setupConfig():
 
 def setupInstall():
     global errorCode, installStatus, installText
-    installStatus, lastStatus, errorCode, installText = 0, 0, "", "Starting Setup"
-    if os.name != "nt": print("Update Failed (Not Windows)")
+    errorCode, installStatus, installText, lastStatus = "", 0, "Starting Setup", 0
+    if os.name != "nt":
+        print("Update Failed (Not Windows)")
+        exit()
     setupConfig()
     ##return ## STOPS THE INSTALLER
     OszustOSStormEyeSetupThread = threading.Thread(name="OszustOSStormEyeSetup", target=OszustOSStormEyeSetup)
@@ -48,12 +50,12 @@ def OszustOSStormEyeSetup():
     global errorCode, installStatus, installText
     ## Threading - Auto Update App
     from urllib.request import urlopen
-    installText, installStatus = "Checking Internet", 1
+    installStatus, installText = 1, "Checking Internet"
     try: urlopen("http://google.com", timeout=1)
     except:
         errorCode = "No_Internet"
         return
-    installText, installStatus = "Creating Save Location", 2
+    installStatus, installText = 2, "Creating Save Location"
     try:
         appNameDownload, appNameFile, appdata, objShell = appName.replace(" ", "_"), appName.replace(" ", "-"), os.getenv('APPDATA') + "\\Oszust Industries", win32com.client.Dispatch("WScript.Shell")
         if True:    
@@ -69,39 +71,40 @@ def OszustOSStormEyeSetup():
             else:
                 shutil.rmtree(installLocation)
                 os.makedirs(installLocation)
-            installText, installStatus = "Downloading", 3
+            installStatus, installText = 3, "Downloading"
             ## Download Update
             if appBuild.lower() == "main": urllib.request.urlretrieve("https://github.com/Oszust-Industries/"+appNameFile+"/archive/refs/heads/main.zip", str(os.getenv('APPDATA') + "\\Oszust Industries\\temp\\"+appNameDownload+".zip"))
             elif appBuild.lower() in ["alpha", "beta"]: urllib.request.urlretrieve("https://github.com/Oszust-Industries/"+appNameFile+"/archive/refs/heads/"+appBuild+".zip", str(os.getenv('APPDATA') + "\\Oszust Industries\\temp\\"+appNameDownload+".zip"))
-            installText, installStatus = "Extracting Files", 5
+            installStatus, installText = 5, "Extracting Files"
             with zipfile.ZipFile(appdata + "\\temp\\"+appNameDownload+".zip", 'r') as zip_ref: zip_ref.extractall(appdata + "\\temp")
             os.remove(appdata + "\\temp\\"+appNameDownload+".zip")
             if appBuild.lower() in ["alpha", "beta"]: os.rename(appdata + "\\temp\\"+appNameFile+"-"+appBuild, appdata + "\\temp\\"+appNameFile+"-Main")
-            installText, installStatus = "Extracting Files", 6
             ## Update Required Files
             filenames = next(walk(appdata + "\\temp\\"+appNameFile+"-Main"), (None, None, []))[2]
             for i in filenames:
                 try: os.remove(installLocation + "\\" + i)
                 except: pass
                 shutil.move(appdata + "\\temp\\"+appNameFile+"-Main\\" + i, installLocation)
-            installText, installStatus = "Creating Shortcut", 7
+            installStatus, installText = 7, "Creating Shortcut"
             ## Create Shortcut
             if path.exists(objShell.SpecialFolders("AllUsersPrograms") + "\\Oszust Industries") == False: os.mkdir(objShell.SpecialFolders("AllUsersPrograms") + "\\Oszust Industries")
             shell = Dispatch('WScript.Shell')
-            shortcut = shell.CreateShortCut(objShell.SpecialFolders("AllUsersPrograms") + "\\Oszust Industries\\" + appName + ".lnk")
-            shortcut.Targetpath = installLocation + "\\" + appName.replace(" ", "_") + ".py"
-            shortcut.WorkingDirectory = installLocation
-            shortcut.IconLocation = installLocation + "\\OszustOSStormEye.ico"
-            shortcut.save()
-            installText, installStatus = "Installing Required Packages", 8
+            try:
+                shortcut = shell.CreateShortCut(objShell.SpecialFolders("AllUsersPrograms") + "\\Oszust Industries\\" + appName + ".lnk")
+                shortcut.Targetpath = installLocation + "\\" + appName.replace(" ", "_") + ".py"
+                shortcut.WorkingDirectory = installLocation
+                shortcut.IconLocation = installLocation + "\\OszustOSStormEye.ico"
+                shortcut.save()
+            except: pass
+            installStatus, installText = 8, "Installing Required Packages"
             ## Install Required Packages
             if installPackages() == "FAIL":
                 errorCode = "Packages_Failed"
                 return
-            installText, installStatus = "Finishing Setup", 9
+            installStatus, installText = 9, "Finishing Setup"
             ## Clean Update
             shutil.rmtree(appdata + "\\temp")
-            installText, installStatus = "Done", 10
+            installStatus, installText = 10, "Done"
     except Exception as Argument: crashMessage()
 
 def installPackages():
