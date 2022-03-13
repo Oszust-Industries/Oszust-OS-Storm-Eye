@@ -1,7 +1,7 @@
 ## Oszust OS Storm Eye - AutoUpdater 2.0.0 - Oszust Industries
 from os import path, walk
 from pathlib import Path
-import  os, shutil, threading, urllib.request, zipfile
+import os, shutil, threading, urllib.request, zipfile
 
 def setupUpdate(systemName, systemBuild, systemVersion):
     global appName, appBuild, appVersion, UpdateStatus
@@ -35,25 +35,24 @@ def OszustOSStormEyeAutoUpdater():
             elif "emergency" in newestVersion.lower(): UpdateStatus = 3
             ## Create Temp Folder for Update in Appdata
             if path.exists(appdata) == False: os.mkdir(appdata)
-            if path.exists(appdata + "\\temp") == False: os.mkdir(appdata + "\\temp")
+            if path.exists(appdata+"\\temp") == False: os.mkdir(appdata + "\\temp")
             else:
-                shutil.rmtree(appdata + "\\temp")
-                os.mkdir(appdata + "\\temp")
+                shutil.rmtree(appdata+"\\temp")
+                os.mkdir(appdata+"\\temp")
             ## Download Update
             if appBuild.lower() == "main": urllib.request.urlretrieve("https://github.com/Oszust-Industries/"+appNameFile+"/archive/refs/heads/main.zip", str(os.getenv('APPDATA') + "\\Oszust Industries\\temp\\"+appNameDownload+".zip"))
             elif appBuild.lower() in ["alpha", "beta"]: urllib.request.urlretrieve("https://github.com/Oszust-Industries/"+appNameFile+"/archive/refs/heads/"+appBuild+".zip", str(os.getenv('APPDATA') + "\\Oszust Industries\\temp\\"+appNameDownload+".zip"))
-            with zipfile.ZipFile(appdata + "\\temp\\"+appNameDownload+".zip", 'r') as zip_ref: zip_ref.extractall(appdata + "\\temp")
+            with zipfile.ZipFile(appdata+"\\temp\\"+appNameDownload+".zip", 'r') as zip_ref: zip_ref.extractall(appdata+"\\temp")
             os.remove(appdata + "\\temp\\"+appNameDownload+".zip")
-            if appBuild.lower() in ["alpha", "beta"]: os.rename(appdata + "\\temp\\"+appNameFile+"-"+appBuild, appdata + "\\temp\\"+appNameFile+"-Main")
+            if appBuild.lower() in ["alpha", "beta"]: os.rename(appdata +"\\temp\\"+appNameFile+"-"+appBuild, appdata +"\\temp\\"+appNameFile+"-Main")
             ## Update Required Files
-            filenames = next(walk(current), (None, None, []))[2]
+            filenames = next(walk(appdata+"\\temp\\"+appNameFile+"-Main\\"), (None, None, []))[2]
             for i in filenames:
-                if any(x in i for x in [".json", ".pyproj"]):
-                    try: os.remove(current + "\\" + i)
-                    except: pass
-                    shutil.move(appdata + "\\temp\\"+appNameFile+"-Main\\" + i, current)
+                try: os.remove(current+"\\"+i)
+                except: print("FAILED")
+                shutil.move(appdata+"\\temp\\"+appNameFile+"-Main\\" + i, current)
             ## Clean Update
-            shutil.rmtree(appdata + "\\temp")
+            shutil.rmtree(appdata+"\\temp")
             if UpdateStatus == -1: UpdateStatus = 1
         else: UpdateStatus = 0
     except Exception as Argument: print("Update Failed (" + str(Argument) + ")")
