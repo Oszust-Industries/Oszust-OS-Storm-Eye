@@ -103,6 +103,7 @@ def OszustOSStormEyeSetup():
                 return
             installStatus, installText = 9, "Finishing Setup"
             ## Clean Update
+            os.chmod(objShell.SpecialFolders("AllUsersPrograms") + "\\Oszust Industries\\" + appName, 0o777)
             shutil.rmtree(appdata + "\\temp")
             installStatus, installText = 10, "Done"
     except Exception as Argument: crashMessage()
