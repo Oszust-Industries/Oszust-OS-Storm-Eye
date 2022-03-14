@@ -19,6 +19,7 @@ Developer: [Oszust Industries](https://github.com/Oszust-Industries)
 
 * Storage - 350 KB
 * Windows Device
+* An Internet Connection
 
 ## Additional Information:
 
