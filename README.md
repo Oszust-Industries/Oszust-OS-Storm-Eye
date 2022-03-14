@@ -11,9 +11,9 @@ Developer: [Oszust Industries](https://github.com/Oszust-Industries)
 
 ## Installation:
 
-1. Run the setup file
-2. When asked, "Do you want to allow this app to make changes to your device," click Yes.
-3. Done. Enjoy!
+1. Make sure you have [Python 3.7+](https://www.microsoft.com/en-us/p/python-39/9p7qfqmjrfp7#activetab=pivot:overviewtab) installed.
+2. Download and run the setup file.
+3. When asked, "Do you want to allow this app to make changes to your device," click Yes.
 
 ## Requirements:
 
