@@ -34,6 +34,6 @@ Developer: [Oszust Industries](https://github.com/Oszust-Industries)
 
 ##
 
-This software uses [Windows 10 Toast](https://pypi.org/project/win10toast/) package to display notifications on your system.
+This software uses [Windows 10 Toast](https://pypi.org/project/win10toast/) package to display notifications.
 
 This software requires an [OpenWeatherMap.org](https://openweathermap.org/) account to get weather data.
