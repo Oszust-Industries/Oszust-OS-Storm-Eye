@@ -30,7 +30,7 @@ Developer: [Oszust Industries](https://github.com/Oszust-Industries)
 * Read/write saves on your computer.
 * Send notifications
 
-<br /> This software uses AutoUpdater 2.0 (*Updates are auto-checked and installed when available*)
+<br /> This software uses AutoUpdater 2.0 (*Updates are auto-checked and installed*)
 
 ##
 
