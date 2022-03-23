@@ -1,6 +1,6 @@
 ## Oszust OS Storm Eye - Oszust Industries
 ## Created on: 12-16-21 - Last update: 3-23-21
-softwareVersion = "ALPHA-v1.0.0.011"
+softwareVersion = "ALPHA-v1.0.0.012"
 def clear(): return ("\n" * 70)
 from urllib.request import urlopen
 from pathlib import Path
@@ -43,7 +43,8 @@ def softwareSetup():
     ## Start Functions
     if exitSystem == False:
         if os.name != "nt": deactivateFileOpening = True  ## Windows Detector
-        print(clear() + "Welcome to " + systemName + ". " + softwareVersion[:-4] + "\nCreated and published by Oszust Industries\n\n")
+        if "ALPHA" in softwareVersion: print(clear() + "Welcome to " + systemName + ". " + softwareVersion + "\nCreated and published by Oszust Industries\n\n")
+        else: print(clear() + "Welcome to " + systemName + ". " + softwareVersion[:-4] + "\nCreated and published by Oszust Industries\n\n")
         basicWeather()
 
 def serverActions(Action):
