@@ -16,7 +16,7 @@ def setupUpdate(systemName, systemBuild, systemVersion):
 def OszustOSStormEyeAutoUpdater():
     global UpdateStatus
     ## Threading - Auto Update App
-    ## Update statuses: -2 - No Internet, 0 - None, 1 - Normal Update, 2 - Hotfix, 3 - LOCK
+    ## Update statuses: -3 - No AppBuild, -2 - No Internet, 0 - None, 1 - Normal Update, 2 - Hotfix, 3 - LOCK
     from urllib.request import urlopen
     try: urlopen("http://google.com", timeout=1)
     except:
@@ -40,8 +40,10 @@ def OszustOSStormEyeAutoUpdater():
                 shutil.rmtree(appdata+"\\temp")
                 os.mkdir(appdata+"\\temp")
             ## Download Update
-            if appBuild.lower() == "main": urllib.request.urlretrieve("https://github.com/Oszust-Industries/"+appNameFile+"/archive/refs/heads/main.zip", str(os.getenv('APPDATA') + "\\Oszust Industries\\temp\\"+appNameDownload+".zip"))
-            elif appBuild.lower() in ["alpha", "beta"]: urllib.request.urlretrieve("https://github.com/Oszust-Industries/"+appNameFile+"/archive/refs/heads/"+appBuild+".zip", str(os.getenv('APPDATA') + "\\Oszust Industries\\temp\\"+appNameDownload+".zip"))
+            if appBuild.lower() in ["alpha", "beta", "main"]: urllib.request.urlretrieve("https://github.com/Oszust-Industries/"+appNameFile+"/archive/refs/heads/"+appBuild+".zip", str(os.getenv('APPDATA') + "\\Oszust Industries\\temp\\"+appNameDownload+".zip"))
+            else:
+                UpdateStatus = -3
+                return "No AppBuild"
             with zipfile.ZipFile(appdata+"\\temp\\"+appNameDownload+".zip", 'r') as zip_ref: zip_ref.extractall(appdata+"\\temp")
             os.remove(appdata + "\\temp\\"+appNameDownload+".zip")
             if appBuild.lower() in ["alpha", "beta"]: os.rename(appdata +"\\temp\\"+appNameFile+"-"+appBuild, appdata +"\\temp\\"+appNameFile+"-Main")
