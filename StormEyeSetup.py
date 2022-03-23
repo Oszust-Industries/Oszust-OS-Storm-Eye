@@ -12,9 +12,9 @@ def setupConfig():
 
 def setupInstall():
     global errorCode, installStatus, installText
-    errorCode, installStatus, installText, lastStatus = "", 0, "Starting Setup", 0
+    errorCode, exitText, installStatus, installText, lastStatus = "", "None", 0, "Starting Setup", 0
     if os.name != "nt":
-        print("Update Failed (Not Windows)")
+        exitText = input(clear() + "The installer has failed. This program is built only for Windows devices. Press enter to quit installer...")
         exit()
     setupConfig()
     ##return ## STOPS THE INSTALLER
@@ -25,12 +25,10 @@ def setupInstall():
             print("\n" * 70)
             print(("\n" * 70) + installText + "... [" + ("=" * installStatus) + "]")
             lastStatus = installStatus
-    if errorCode == "No_Internet":
-        exitText = input(clear() + "The installer has failed. There doesn't seem to be any internet connection on your device. Press enter to quit installer...")
-        exit()
-    elif errorCode == "Packages_Failed":
-        exitText = input(clear() + "The installer has failed. A required package failed to install. Press enter to quit installer...")
-        exit()
+    if errorCode == "No_Internet": exitText = input(clear() + "The installer has failed. There doesn't seem to be any internet connection on your device. Press enter to quit installer...")
+    elif errorCode == "Packages_Failed": exitText = input(clear() + "The installer has failed. A required package failed to install. Press enter to quit installer...")
+    elif errorCode == "AppBuild_Failed": exitText = input(clear() + "The installer has failed. A requested app build does not exist. Press enter to quit installer...")
+    if exitText == "": exit()
     exitText = input(clear() + appName + " has finished installing. Press enter to quit installer...")
     os.remove(__file__)
 
@@ -75,8 +73,10 @@ def OszustOSStormEyeSetup():
             os.system('ICACLS "'+installLocation+'" /grant Users:(OI)(CI)F /T')
             installStatus, installText = 3, "Downloading"
             ## Download Update
-            if appBuild.lower() == "main": urllib.request.urlretrieve("https://github.com/Oszust-Industries/"+appNameFile+"/archive/refs/heads/main.zip", str(os.getenv('APPDATA') + "\\Oszust Industries\\temp\\"+appNameDownload+".zip"))
-            elif appBuild.lower() in ["alpha", "beta"]: urllib.request.urlretrieve("https://github.com/Oszust-Industries/"+appNameFile+"/archive/refs/heads/"+appBuild+".zip", str(os.getenv('APPDATA') + "\\Oszust Industries\\temp\\"+appNameDownload+".zip"))
+            if appBuild.lower() in ["alpha", "beta", "main"]: urllib.request.urlretrieve("https://github.com/Oszust-Industries/"+appNameFile+"/archive/refs/heads/"+appBuild+".zip", str(os.getenv('APPDATA') + "\\Oszust Industries\\temp\\"+appNameDownload+".zip"))
+            else:
+                errorCode = "AppBuild_Failed"
+                return
             installStatus, installText = 5, "Extracting Files"
             with zipfile.ZipFile(appdata + "\\temp\\"+appNameDownload+".zip", 'r') as zip_ref: zip_ref.extractall(appdata + "\\temp")
             os.remove(appdata + "\\temp\\"+appNameDownload+".zip")
