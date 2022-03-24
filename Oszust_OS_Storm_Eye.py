@@ -1,6 +1,6 @@
 ## Oszust OS Storm Eye - Oszust Industries
 ## Created on: 12-16-21 - Last update: 3-23-21
-softwareVersion = "ALPHA-v1.0.0.012"
+softwareVersion = "ALPHA-v1.0.0.013"
 def clear(): return ("\n" * 70)
 from urllib.request import urlopen
 from pathlib import Path
@@ -137,7 +137,7 @@ def basicWeather():
         if (datetime.datetime.now().hour < datetime.datetime.fromtimestamp(weatherData["sys"]["sunset"]).hour): print("Sunset: " + str(citySunset))
         elif (datetime.datetime.now().hour == datetime.datetime.fromtimestamp(weatherData["sys"]["sunset"]).hour) and (datetime.datetime.now().minute < datetime.datetime.fromtimestamp(weatherData["sys"]["sunset"]).minute): print("Sunset: " + str(citySunset))
         else: print("Sunrise: " + str(citySunrise))
-        print("Weather Description: " + str(cityWeatherDescription))
+        print("Weather Description: " + str(cityWeatherDescription).capitalize())
         print("Moon: " + moonPosition(weatherData["sys"]["sunset"]+60) + "\n\n\n")
         weatherForecast(str(coord["lon"]), str(coord["lat"]), cityName)
     except: print("City Not Found")
