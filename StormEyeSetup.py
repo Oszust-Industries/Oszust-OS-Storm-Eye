@@ -1,7 +1,10 @@
-## Oszust OS Storm Eye - Setup Installer 1.0.0 - Oszust Industries
+## Oszust OS Storm Eye - Setup Installer 1.1.0 - Oszust Industries
 def clear(): return ("\n" * 70)
 from os import path, walk
-from win32com.client import Dispatch
+try: from win32com.client import Dispatch
+except:
+    exitText = input(clear() + "The installer has failed. You seem to not have the correct Python installed. Press enter to quit installer...")
+    exit()
 import ctypes, os, shutil, sys, threading, urllib.request, win32com.client, zipfile
 
 def setupConfig():
@@ -15,6 +18,9 @@ def setupInstall():
     errorCode, exitText, installStatus, installText, lastStatus = "", "None", 0, "Starting Setup", 0
     if os.name != "nt":
         exitText = input(clear() + "The installer has failed. This program is built only for Windows devices. Press enter to quit installer...")
+        exit()
+    if sys.version_info >= (3, 7) == False:
+        exitText = input(clear() + "The installer has failed. You seem to have an old version of Python installed. The program requires v3.7.0 or higher. Press enter to quit installer...")
         exit()
     setupConfig()
     ##return ## STOPS THE INSTALLER
