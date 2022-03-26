@@ -1,6 +1,6 @@
 ## Oszust OS Storm Eye - Oszust Industries
-## Created on: 12-16-21 - Last update: 3-23-21
-softwareVersion = "ALPHA-v1.0.0.013"
+## Created on: 12-16-21 - Last update: 3-26-21
+softwareVersion = "ALPHA-v1.0.0.015"
 def clear(): return ("\n" * 70)
 from urllib.request import urlopen
 from pathlib import Path
@@ -111,11 +111,15 @@ def crashMessage():
     else: exit()
 
 def basicWeather():
+    global hourly
     searchCityName = input("Enter city name: ").replace(" ", "+")
     if ",+" in searchCityName: searchCityName += ",+us"
     try:
+        print("\nLoading Weather...")
         weatherData = json.loads(urlopen("http://api.openweathermap.org/data/2.5/weather?appid=" + apiKey + "&units=imperial&q=" + searchCityName).read())
-        print("Loading Weather...")
+        coord = weatherData["coord"]
+        ForecastData = json.loads(urlopen("https://api.openweathermap.org/data/2.5/onecall?lat=" + str(coord["lat"]) + "&lon=" + str(coord["lon"]) + "&units=imperial&appid=" + apiKey).read())
+        hourly = ForecastData["hourly"]
         main = weatherData["main"]
         coord = weatherData["coord"]
         sys = weatherData["sys"]
@@ -130,16 +134,20 @@ def basicWeather():
         citySunset = datetime.datetime.fromtimestamp(weatherData["sys"]["sunset"]+60).strftime("%I:%M %p %Z%z") + timeZone
         citySunrise = datetime.datetime.fromtimestamp(weatherData["sys"]["sunrise"]+60).strftime("%I:%M %p %Z%z") + timeZone
         print(clear())
-        print("\n\n\nCurrent Weather in "+ str(cityName) + ":\n")
-        print("Temperature: " + str(cityTemp) + u"\N{DEGREE SIGN}")
-        print("Feels-like Temperature: " + str(cityFeelTemp) + u"\N{DEGREE SIGN}")
-        print("Pressure: " + str(cityPressure) + " mbar")
+        print(str(cityName) + ":\n")
+        if cityWeatherDescription[-1] == "s": print(str(cityTemp) + u"\N{DEGREE SIGN}" + " with " + str(cityWeatherDescription).capitalize())
+        else: print(str(cityTemp) + u"\N{DEGREE SIGN}" + " with a " + str(cityWeatherDescription).capitalize())
+        print("Feels: " + str(cityFeelTemp) + u"\N{DEGREE SIGN}")
+        if int(hourly[1]["pop"] * 100) > 50 and int(hourly[1]["temp"]) > 32: print("\nRain during the next hour.")
+        elif int(hourly[1]["pop"] * 100) > 50 and int(hourly[1]["temp"]) <= 32: print("\nSnow during the next hour.")
+        else: print("\nNo precipitation during the next hour.")
+        print("\nPressure: " + str(cityPressure) + " mbar")
+        if citySunset[0] == "0": citySunset = citySunset[1:]
         if (datetime.datetime.now().hour < datetime.datetime.fromtimestamp(weatherData["sys"]["sunset"]).hour): print("Sunset: " + str(citySunset))
         elif (datetime.datetime.now().hour == datetime.datetime.fromtimestamp(weatherData["sys"]["sunset"]).hour) and (datetime.datetime.now().minute < datetime.datetime.fromtimestamp(weatherData["sys"]["sunset"]).minute): print("Sunset: " + str(citySunset))
         else: print("Sunrise: " + str(citySunrise))
-        print("Weather Description: " + str(cityWeatherDescription).capitalize())
-        print("Moon: " + moonPosition(weatherData["sys"]["sunset"]+60) + "\n\n\n")
-        weatherForecast(str(coord["lon"]), str(coord["lat"]), cityName)
+        print("Moon: " + moonPosition(weatherData["sys"]["sunset"]+60) + "\n")
+        weatherForecast(cityName)
     except: print("City Not Found")
     print("\n\n\n")
     basicWeather()
@@ -151,29 +159,21 @@ def moonPosition(cityTime):
     days = dec(diff.days) + (dec(diff.seconds) / dec(86400))
     lunations = dec("0.20439731") + (days * dec("0.03386319269"))
     index = math.floor((lunations % dec(1) * dec(8)) + dec("0.5"))
-    return{
-      0: "New Moon", 
-      1: "Waxing Crescent", 
-      2: "First Quarter", 
-      3: "Waxing Gibbous", 
-      4: "Full Moon", 
-      5: "Waning Gibbous", 
-      6: "Third Quarter", 
-      7: "Waning Crescent"
-    }[int(index) & 7]
+    return{0: "New Moon",1: "Waxing Crescent",2: "First Quarter",3: "Waxing Gibbous",4: "Full Moon",5: "Waning Gibbous",6: "Third Quarter",7: "Waning Crescent"}[int(index) & 7]
 
-def weatherForecast(cityLon, cityLat, cityName):
-    ForecastData = json.loads(urlopen("https://api.openweathermap.org/data/2.5/onecall?lat=" + cityLat + "&lon=" + cityLon + "&units=imperial&appid=" + apiKey).read())
-    hourly = ForecastData["hourly"]
-    print("Hourly Forecast for " + cityName + ":\n")
+def weatherForecast(cityName):
     for i in range(1, 12):
         hourlyTime = datetime.datetime.fromtimestamp(hourly[i]["dt"]).strftime("%I:%M %p %Z%z")[:-1]
+        date = (datetime.datetime.now()).strftime("%m/%d/%y")
+        tomorrowDate = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime("%m/%d/%y")
         if hourlyTime[0] == "0": hourlyTime = hourlyTime[1:]
-        if i == 1 and hourlyTime != "11:00 PM": print(str((datetime.datetime.now()).strftime("%m/%d/%y")) + ":")
+        if date[0] == "0": date = date[1:]
+        if tomorrowDate[0] == "0": tomorrowDate = tomorrowDate[1:]
+        if i == 1: print("Hourly Forecast:")
         print("\t" + hourlyTime + ":")
         print("\t\tFeels-like Temperature: " + str(int(hourly[i]["feels_like"])) + u"\N{DEGREE SIGN}")
         print("\t\tPrecipitation Probability: " + str(int(hourly[i]["pop"] * 100)) + "%")
-        if hourlyTime == "11:00 PM": print(("-" * 45) + "\n" + str((datetime.datetime.now() + datetime.timedelta(days=1)).strftime("%m/%d/%y")) + ":")
+        if hourlyTime == "11:00 PM": print(("-" * 45) + "\n" + str(tomorrowDate) + ": (Sunrise/Sunset):")
 
 
 ## Start System
