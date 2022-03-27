@@ -1,16 +1,16 @@
 ## Oszust OS Storm Eye - Oszust Industries
 ## Created on: 12-16-21 - Last update: 3-26-21
-softwareVersion = "ALPHA-v1.0.0.015"
+softwareVersion = "ALPHA-v1.0.1.000"
 def clear(): return ("\n" * 70)
 from urllib.request import urlopen
 from pathlib import Path
-import threading, datetime, json, os
+import threading, datetime, json, os, pickle
 import AutoUpdater
 
 def softwareConfig():
     import uuid
     ## System Configuration
-    global appBuild, appdata, deactivateFileOpening, exitSystem, resetSettings, systemName, MeasurementUnits, HourlyForecastScale, apiKey
+    global appBuild, appdata, deactivateFileOpening, exitSystem, resetSettings, systemName, MeasurementUnits, HourlyForecastScale, apiKey, recentSearches
     appdata, systemName, exitSystem = os.getenv('APPDATA') + "\\Oszust Industries\\", "Oszust OS Storm Eye", False
     try:
         configFile = json.load(open(appdata + systemName + "\\Config.json",))
@@ -27,6 +27,11 @@ def softwareConfig():
         os.remove(appdata + systemName + "\\Config.json")
         os.rename(tempfile, appdata + systemName + "\\Config.json")
         softwareConfig()
+    try:
+        recentSearches = pickle.load(open(appdata + systemName + "\\Recent.p", "rb"))
+    except:
+        recentSearches = []
+        pickle.dump(recentSearches, open(appdata + systemName + "\\Recent.p", "wb"))
 
 def softwareSetup():
     ## Setup Software
@@ -43,9 +48,8 @@ def softwareSetup():
     ## Start Functions
     if exitSystem == False:
         if os.name != "nt": deactivateFileOpening = True  ## Windows Detector
-        if "ALPHA" in softwareVersion: print(clear() + "Welcome to " + systemName + ". " + softwareVersion + "\nCreated and published by Oszust Industries\n\n")
-        else: print(clear() + "Welcome to " + systemName + ". " + softwareVersion[:-4] + "\nCreated and published by Oszust Industries\n\n")
-        basicWeather()
+        print(clear())
+        mainMenu()
 
 def serverActions(Action):
     global exitSystem, toaster, userAPIKey
@@ -110,10 +114,35 @@ def crashMessage():
         except Exception as Argument: crashMessage()
     else: exit()
 
-def basicWeather():
-    global hourly
-    searchCityName = input("Enter city name: ").replace(" ", "+")
-    if ",+" in searchCityName: searchCityName += ",+us"
+def mainMenu():
+    global recentSearches
+    pickle.dump(recentSearches, open(appdata + systemName + "\\Recent.p", "wb"))
+    menuSpot = 2
+    favoriteSearches = []
+    if "ALPHA" in softwareVersion: print(systemName + " " + softwareVersion + "\nCreated and published by Oszust Industries\n\n")
+    else: print(systemName + " " + softwareVersion[:-4] + "\nCreated and published by Oszust Industries\n\n")
+    print("1. Settings (To Be Added Soon)")
+    print("\nFavorite Locations:")
+    if len(favoriteSearches) == 0: print("No favorite locations yet.")
+    else:
+        favoriteSearches.sort()
+        for i in favoriteSearches:
+            print("   " + str(menuSpot) + ". " + i)
+            menuSpot += 1
+    print("\nRecent Searches:")
+    if len(recentSearches) == 0: print("No recent searches.")
+    else:
+        for i in recentSearches:
+            print("   " + str(menuSpot) + ". " + i)
+            menuSpot += 1
+    cityName = input("\nEnter city name or menu option: ").replace(" ", "+")
+    if cityName.isnumeric() and int(cityName) > 2 and int(cityName) < menuSpot:
+        if int(cityName) > len(favoriteSearches): cityName = recentSearches[(int(cityName) - len(favoriteSearches)) - 2]
+    if ",+" in cityName: cityName += ",+us"
+    basicWeather(cityName.replace(" ", "+"))
+
+def basicWeather(searchCityName):
+    global hourly, recentSearches
     try:
         print("\nLoading Weather...")
         weatherData = json.loads(urlopen("http://api.openweathermap.org/data/2.5/weather?appid=" + apiKey + "&units=imperial&q=" + searchCityName).read())
@@ -128,7 +157,9 @@ def basicWeather():
         cityFeelTemp = int(main["feels_like"])
         cityPressure = main["pressure"]
         cityWeatherDescription = weatherData["weather"][0]["description"]
-
+        if cityName in recentSearches: recentSearches.remove(cityName)
+        recentSearches.insert(0, cityName)
+        if len(recentSearches) > 5: recentSearches.remove(recentSearches[5])
         cityHumidity = main["humidity"]
         timeZone = str([ s[0] for s in ((datetime.datetime.now().astimezone()).tzinfo).tzname((datetime.datetime.now()).astimezone()).split() ]).replace("'", "").replace("[", "").replace("]", "").replace(",", "").replace(" ", "")
         citySunset = datetime.datetime.fromtimestamp(weatherData["sys"]["sunset"]+60).strftime("%I:%M %p %Z%z") + timeZone
@@ -148,9 +179,9 @@ def basicWeather():
         else: print("Sunrise: " + str(citySunrise))
         print("Moon: " + moonPosition(weatherData["sys"]["sunset"]+60) + "\n")
         weatherForecast(cityName)
-    except: print("City Not Found")
+    except: print(clear() + "The requested location could not be found.")
     print("\n\n\n")
-    basicWeather()
+    mainMenu()
 
 def moonPosition(cityTime):
     import math, decimal, datetime
