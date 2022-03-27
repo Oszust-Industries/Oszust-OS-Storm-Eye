@@ -1,6 +1,6 @@
 ## Oszust OS Storm Eye - Oszust Industries
 ## Created on: 12-16-21 - Last update: 3-26-21
-softwareVersion = "ALPHA-v1.0.1.000"
+softwareVersion = "ALPHA-v1.0.1.001"
 def clear(): return ("\n" * 70)
 from urllib.request import urlopen
 from pathlib import Path
@@ -136,7 +136,7 @@ def mainMenu():
             print("   " + str(menuSpot) + ". " + i)
             menuSpot += 1
     cityName = input("\nEnter city name or menu option: ").replace(" ", "+")
-    if cityName.isnumeric() and int(cityName) > 2 and int(cityName) < menuSpot:
+    if cityName.isnumeric() and int(cityName) >= 2 and int(cityName) < menuSpot:
         if int(cityName) > len(favoriteSearches): cityName = recentSearches[(int(cityName) - len(favoriteSearches)) - 2]
     if ",+" in cityName: cityName += ",+us"
     basicWeather(cityName.replace(" ", "+"))
