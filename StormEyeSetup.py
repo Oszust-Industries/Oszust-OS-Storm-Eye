@@ -3,8 +3,10 @@ def clear(): return ("\n" * 70)
 from os import path, walk
 try: from win32com.client import Dispatch
 except:
-    exitText = input(clear() + "The installer has failed. You seem to not have the correct Python installed. Press enter to quit installer...")
-    exit()
+    try: os.system("pip install pywin32")
+    except:
+        exitText = input(clear() + "The installer has failed. You seem to not have the correct Python installed. Press enter to quit installer...")
+        exit()
 import ctypes, os, shutil, sys, threading, urllib.request, win32com.client, zipfile
 
 def setupConfig():
