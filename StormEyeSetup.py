@@ -1,6 +1,6 @@
 ## Oszust OS Storm Eye - Setup Installer 1.1.2 - Oszust Industries
 def clear(): return ("\n" * 70)
-import os
+import os, sys
 from os import path, walk
 def fixPython():
     try:
@@ -12,7 +12,7 @@ def fixPython():
         exit()
 try: from win32com.client import Dispatch
 except: fixPython()
-import ctypes, shutil, sys, threading, urllib.request, win32com.client, zipfile
+import ctypes, shutil, threading, urllib.request, win32com.client, zipfile
 
 def setupConfig():
     global appBuild, appName, installLocation
