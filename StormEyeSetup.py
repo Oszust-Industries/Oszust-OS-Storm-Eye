@@ -1,4 +1,4 @@
-## Oszust OS Storm Eye - Setup Installer 1.1.2 - Oszust Industries
+## Oszust OS Storm Eye - Setup Installer 1.2.0 - Oszust Industries
 def clear(): return ("\n" * 70)
 import os, sys
 from os import path, walk
@@ -6,7 +6,7 @@ def fixPython():
     try:
         print("Installing Python Package...")
         os.system("pip install pywin32")
-        os.execv(sys.argv[0], sys.argv)
+        os.execv(sys.executable, ['python'] + sys.argv)
     except:
         exitText = input(clear() + "The installer has failed. You seem to not have the correct Python installed. Press enter to quit installer...")
         exit()
