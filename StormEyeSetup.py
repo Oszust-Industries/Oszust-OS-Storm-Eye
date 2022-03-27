@@ -1,13 +1,17 @@
-## Oszust OS Storm Eye - Setup Installer 1.1.0 - Oszust Industries
+## Oszust OS Storm Eye - Setup Installer 1.1.1 - Oszust Industries
 def clear(): return ("\n" * 70)
+import os
 from os import path, walk
-try: from win32com.client import Dispatch
-except:
-    try: os.system("pip install pywin32")
+def fixPython():
+    try:
+        os.system("pip install pywin32")
+        from win32com.client import Dispatch
     except:
         exitText = input(clear() + "The installer has failed. You seem to not have the correct Python installed. Press enter to quit installer...")
         exit()
-import ctypes, os, shutil, sys, threading, urllib.request, win32com.client, zipfile
+try: from win32com.client import Dispatch
+except: fixPython()
+import ctypes, shutil, sys, threading, urllib.request, win32com.client, zipfile
 
 def setupConfig():
     global appBuild, appName, installLocation
