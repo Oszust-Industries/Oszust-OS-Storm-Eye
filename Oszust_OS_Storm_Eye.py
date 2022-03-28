@@ -1,6 +1,6 @@
 ## Oszust OS Storm Eye - Oszust Industries
 ## Created on: 12-16-21 - Last update: 3-28-21
-softwareVersion = "ALPHA-v1.0.1.028"
+softwareVersion = "ALPHA-v1.0.2.000"
 def clear(): return ("\n" * 70)
 from urllib.request import urlopen
 from pathlib import Path
