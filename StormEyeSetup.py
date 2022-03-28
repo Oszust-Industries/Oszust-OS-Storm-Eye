@@ -36,7 +36,7 @@ def setupInstall():
     while installStatus < 10 and errorCode == "":
         if installStatus != lastStatus:
             print("\n" * 70)
-            print(("\n" * 70) + installText + "... [" + ("=" * installStatus) + "]")
+            print(("\n" * 70) + installText + "... [" + ("=" * installStatus) + "] " + (installStatus*10) + "%")
             lastStatus = installStatus
     if errorCode == "No_Internet": exitText = input(clear() + "The installer has failed. There doesn't seem to be any internet connection on your device. Press enter to quit installer...")
     elif errorCode == "Packages_Failed": exitText = input(clear() + "The installer has failed. A required package failed to install. Press enter to quit installer...")
