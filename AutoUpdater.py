@@ -66,6 +66,6 @@ def packageManagement():
     try: from win10toast_click import ToastNotifier
     except:
         try:
-            os.system("pip install win10toast-click >/dev/null 2>&1")
+            os.system("pip install win10toast-click -q")
             from win10toast_click import ToastNotifier
         except: return "FAIL"
