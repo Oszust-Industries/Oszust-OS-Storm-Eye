@@ -6,7 +6,7 @@ import os, shutil, threading, urllib.request, zipfile
 def setupUpdate(systemName, systemBuild, systemVersion):
     global appName, appBuild, appVersion, UpdateStatus
     appName, appBuild, appVersion, UpdateStatus = systemName, systemBuild, systemVersion, -1
-    ##return ## STOPS THE UPDATER
+    return ## STOPS THE UPDATER
     if os.name != "nt": return "Update Failed (Not Windows)"
     ## Setup Thread and Return to Main App
     OszustOSStormEyeAutoUpdaterThread = threading.Thread(name="OszustOSStormEyeAutoUpdater", target=OszustOSStormEyeAutoUpdater)
@@ -33,12 +33,12 @@ def OszustOSStormEyeAutoUpdater():
         return "No Internet"
     try:
         appNameDownload, appNameFile, appdata, current = appName.replace(" ", "_"), appName.replace(" ", "-"), os.getenv('APPDATA') + "\\Oszust Industries", str(Path(__file__).resolve().parent)
-        if appBuild.lower() == "main":
-            for line in urllib.request.urlopen("https://raw.githubusercontent.com/Oszust-Industries/"+appNameFile+"/Beta/Version.txt"):
-                newestVersion = "".join([s for s in line.decode("utf-8") if s.strip("\r\n")])
-        elif appBuild.lower() in ["alpha", "beta"]:
+        if appBuild.lower() in ["alpha", "beta", "main"]:
             for line in urllib.request.urlopen("https://raw.githubusercontent.com/Oszust-Industries/"+appNameFile+"/"+appBuild+"/Version.txt"):
                 newestVersion = "".join([s for s in line.decode("utf-8") if s.strip("\r\n")])
+        else:
+             UpdateStatus = -3
+             return "No AppBuild"
         if newestVersion != appVersion:
             if "hotfix" in newestVersion.lower(): UpdateStatus = 2
             elif "emergency" in newestVersion.lower(): UpdateStatus = 3
@@ -50,9 +50,6 @@ def OszustOSStormEyeAutoUpdater():
                 os.mkdir(appdata+"\\temp")
             ## Download Update
             if appBuild.lower() in ["alpha", "beta", "main"]: urllib.request.urlretrieve("https://github.com/Oszust-Industries/"+appNameFile+"/archive/refs/heads/"+appBuild+".zip", str(os.getenv('APPDATA') + "\\Oszust Industries\\temp\\"+appNameDownload+".zip"))
-            else:
-                UpdateStatus = -3
-                return "No AppBuild"
             with zipfile.ZipFile(appdata+"\\temp\\"+appNameDownload+".zip", 'r') as zip_ref: zip_ref.extractall(appdata+"\\temp")
             os.remove(appdata + "\\temp\\"+appNameDownload+".zip")
             if appBuild.lower() in ["alpha", "beta"]: os.rename(appdata +"\\temp\\"+appNameFile+"-"+appBuild, appdata +"\\temp\\"+appNameFile+"-Main")
