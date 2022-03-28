@@ -1,4 +1,4 @@
-## Oszust OS Storm Eye - AutoUpdater 2.1.2 - Oszust Industries
+## Oszust OS Storm Eye - AutoUpdater 2.2.0 - Oszust Industries
 from os import path, walk
 from pathlib import Path
 import os, shutil, threading, urllib.request, zipfile
@@ -6,7 +6,7 @@ import os, shutil, threading, urllib.request, zipfile
 def setupUpdate(systemName, systemBuild, systemVersion):
     global appName, appBuild, appVersion, UpdateStatus
     appName, appBuild, appVersion, UpdateStatus = systemName, systemBuild, systemVersion, -1
-    ##return ## STOPS THE UPDATER
+    return ## STOPS THE UPDATER
     if os.name != "nt": return "Update Failed (Not Windows)"
     ## Setup Thread and Return to Main App
     OszustOSStormEyeAutoUpdaterThread = threading.Thread(name="OszustOSStormEyeAutoUpdater", target=OszustOSStormEyeAutoUpdater)
