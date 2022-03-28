@@ -1,4 +1,4 @@
-## Oszust OS Storm Eye - AutoUpdater 2.1.1 - Oszust Industries
+## Oszust OS Storm Eye - AutoUpdater 2.1.2 - Oszust Industries
 from os import path, walk
 from pathlib import Path
 import os, shutil, threading, urllib.request, zipfile
@@ -53,7 +53,9 @@ def OszustOSStormEyeAutoUpdater():
             ## Insall/Update Required Packages
             try: from win10toast_click import ToastNotifier
             except:
-                try: os.system("pip install win10toast-click -q")
+                try:
+                    os.system("pip install win10toast-click -q")
+                    UpdateStatus = 3
                 except: return "FAIL"
             ## Clean Update
             shutil.rmtree(appdata+"\\temp")
