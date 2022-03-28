@@ -6,12 +6,21 @@ import os, shutil, threading, urllib.request, zipfile
 def setupUpdate(systemName, systemBuild, systemVersion):
     global appName, appBuild, appVersion, UpdateStatus
     appName, appBuild, appVersion, UpdateStatus = systemName, systemBuild, systemVersion, -1
-    return ## STOPS THE UPDATER
+    ##return ## STOPS THE UPDATER
     if os.name != "nt": return "Update Failed (Not Windows)"
     ## Setup Thread and Return to Main App
     OszustOSStormEyeAutoUpdaterThread = threading.Thread(name="OszustOSStormEyeAutoUpdater", target=OszustOSStormEyeAutoUpdater)
     OszustOSStormEyeAutoUpdaterThread.start()
     return "Running Updater"
+
+def packageManagement():
+    ## Insall/Update Required Packages
+    try: from win10toast_click import ToastNotifier
+    except:
+        try:
+            os.system("pip install win10toast-click -q")
+            from win10toast_click import ToastNotifier
+        except: return "FAIL"
 
 def OszustOSStormEyeAutoUpdater():
     global UpdateStatus
@@ -60,12 +69,3 @@ def OszustOSStormEyeAutoUpdater():
             if UpdateStatus == -1: UpdateStatus = 1
         else: UpdateStatus = 0
     except Exception as Argument: print("Update Failed (" + str(Argument) + ")")
-
-def packageManagement():
-    ## Insall/Update Required Packages
-    try: from win10toast_click import ToastNotifier
-    except:
-        try:
-            os.system("pip install win10toast-click -q")
-            from win10toast_click import ToastNotifier
-        except: return "FAIL"
