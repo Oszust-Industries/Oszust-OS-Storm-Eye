@@ -1,10 +1,10 @@
 ## Oszust OS Storm Eye - Oszust Industries
-## Created on: 12-16-21 - Last update: 3-26-21
-softwareVersion = "ALPHA-v1.0.1.001"
+## Created on: 12-16-21 - Last update: 3-27-21
+softwareVersion = "ALPHA-v1.0.1.003"
 def clear(): return ("\n" * 70)
 from urllib.request import urlopen
 from pathlib import Path
-import threading, datetime, json, os, pickle
+import threading, datetime, json, os, pickle, sys
 import AutoUpdater
 
 def softwareConfig():
@@ -67,7 +67,7 @@ def serverActions(Action):
         checkUpdateStatusThread = threading.Thread(name="checkUpdateStatus", target=checkUpdateStatus)
         checkUpdateStatusThread.start()
     elif Action == "startAchievementSystem":
-        from win10toast import ToastNotifier
+        from win10toast_click import ToastNotifier
         toaster = ToastNotifier()
     elif Action == "apiSetup":
         import webbrowser, uuid
@@ -97,10 +97,16 @@ def checkUpdateStatus():
             print(clear() + "An emergency has been downloaded.\nThe update has fixed critical issues.\n\nPlease restart "+systemName+" to finish the installation.")
             exit()
         elif AutoUpdater.UpdateStatus in [1, 2]:
-            toaster.show_toast(systemName + ": New Update Installed", "Relaunch the app to finish the update.", icon_path = str(Path(__file__).resolve().parent) + "\\DownloadIcon.ico", duration = 8, threaded = True)
+            toaster.show_toast(systemName + ": New Update Installed", "Relaunch the app to finish the update.", icon_path = str(Path(__file__).resolve().parent) + "\\DownloadIcon.ico", duration = 8, threaded = True, callback_on_click=notificationClickActions("restart"))
             return "Update Cleared"
-        elif AutoUpdater.UpdateStatus in [-3, -2, 0]: return "Update Cleared"
+        elif AutoUpdater.UpdateStatus == -3:
+            toaster.show_toast(systemName + ": AutoUpdater Failed", "A requested app build does not exist.", icon_path = str(Path(__file__).resolve().parent) + "\\DownloadIcon.ico", duration = 8, threaded = True)
+            return "Update Failed"
+        elif AutoUpdater.UpdateStatus in [-2, 0]: return "Update Cleared"
         else: time.sleep(0.3)
+
+def notificationClickActions(Action):
+    if Action == "restart": os.execv(sys.executable, ['python'] + sys.argv)
 
 def crashMessage():
     ## Display Crash
