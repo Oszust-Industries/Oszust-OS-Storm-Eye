@@ -1,6 +1,6 @@
 ## Oszust OS Storm Eye - Oszust Industries
-## Created on: 12-16-21 - Last update: 3-27-21
-softwareVersion = "ALPHA-v1.0.1.015"
+## Created on: 12-16-21 - Last update: 3-28-21
+softwareVersion = "ALPHA-v1.0.1.017"
 def clear(): return ("\n" * 70)
 def notificationClickActions_Exit(): exit()
 from urllib.request import urlopen
@@ -99,12 +99,11 @@ def checkUpdateStatus():
     ## Threading - Check Update Status
     import time
     while True:
-        print("HI")
         if AutoUpdater.UpdateStatus == 3:
             exitText = input(clear() + "An emergency has been downloaded.\nThe update has fixed critical issues.\n\nPress any key to exit "+systemName+" and finish the installation.")
             exit()
         elif AutoUpdater.UpdateStatus in [1, 2]:
-            toaster.show_toast(systemName + ": New Update Installed", "Relaunch the app to finish the update.", icon_path = str(Path(__file__).resolve().parent) + "\\DownloadIcon.ico", duration = 8, threaded = True, callback_on_click=notificationClickActions("restart"))
+            toaster.show_toast(systemName + ": New Update Installed", "Relaunch the app to finish the update.", icon_path = str(Path(__file__).resolve().parent) + "\\DownloadIcon.ico", duration = 8, threaded = True, callback_on_click = notificationClickActions_Exit)
             return "Update Cleared"
         elif AutoUpdater.UpdateStatus == -3:
             toaster.show_toast(systemName + ": AutoUpdater Failed", "A requested app build does not exist.", icon_path = str(Path(__file__).resolve().parent) + "\\DownloadIcon.ico", duration = 8, threaded = True)
