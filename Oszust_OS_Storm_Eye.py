@@ -1,6 +1,6 @@
 ## Oszust OS Storm Eye - Oszust Industries
 ## Created on: 12-16-21 - Last update: 3-27-21
-softwareVersion = "ALPHA-v1.0.1.008"
+softwareVersion = "ALPHA-v1.0.1.010"
 def clear(): return ("\n" * 70)
 from urllib.request import urlopen
 from pathlib import Path
@@ -73,7 +73,7 @@ def serverActions(Action):
         except:
             import time
             exitText = input(clear() + "A required package is missing and is being installed.\nPlease wait a few moments for the package to install.\n\nPress any key to restart "+systemName+" and finish the installation.")
-            time.sleep(1)
+            os.system("pip install win10toast-click -q")
             os.execv(sys.executable, ['python'] + sys.argv)
     elif Action == "apiSetup":
         import webbrowser, uuid
