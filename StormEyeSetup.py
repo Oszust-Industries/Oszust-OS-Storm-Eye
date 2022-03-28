@@ -1,4 +1,4 @@
-## Oszust OS Storm Eye - Setup Installer 1.2.1 - Oszust Industries
+## Oszust OS Storm Eye - Setup Installer 1.2.2 - Oszust Industries
 def clear(): return ("\n" * 70)
 import os, sys
 from os import path, walk
@@ -83,7 +83,7 @@ def OszustOSStormEyeSetup():
             else:
                 shutil.rmtree(installLocation)
                 os.makedirs(installLocation)
-            os.system('ICACLS "'+installLocation+'" /grant Users:(OI)(CI)F /T > /dev/null 2>&1')
+            os.system('ICACLS "'+installLocation+'" /grant Users:(OI)(CI)F /T')
             installStatus, installText = 3, "Downloading"
             ## Download Update
             if appBuild.lower() in ["alpha", "beta", "main"]: urllib.request.urlretrieve("https://github.com/Oszust-Industries/"+appNameFile+"/archive/refs/heads/"+appBuild+".zip", str(os.getenv('APPDATA') + "\\Oszust Industries\\temp\\"+appNameDownload+".zip"))
