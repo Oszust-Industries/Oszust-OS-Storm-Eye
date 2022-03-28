@@ -1,11 +1,10 @@
 ## Oszust OS Storm Eye - Oszust Industries
 ## Created on: 12-16-21 - Last update: 3-28-21
-softwareVersion = "ALPHA-v1.0.1.026"
+softwareVersion = "ALPHA-v1.0.1.028"
 def clear(): return ("\n" * 70)
 from urllib.request import urlopen
 from pathlib import Path
 import threading, datetime, json, os, pickle
-def openChangelog(): webbrowser.open_new("https://github.com/Oszust-Industries/" + systemName.replace(" ", "-") + "/releases")
 import AutoUpdater
 
 def softwareConfig():
@@ -95,7 +94,7 @@ def serverActions(Action):
 def checkUpdateStatus():
     global exitSystem
     ## Threading - Check Update Status
-    import time, webbrowser
+    import time
     while True:
         if AutoUpdater.UpdateStatus == 3:
             exitSystem = True
@@ -109,6 +108,10 @@ def checkUpdateStatus():
             return "Update Failed"
         elif AutoUpdater.UpdateStatus in [-2, 0]: return "Update Cleared"
         else: time.sleep(0.3)
+
+def openChangelog():
+    import webbrowser
+    webbrowser.open_new("https://github.com/Oszust-Industries/" + systemName.replace(" ", "-") + "/releases")
 
 def crashMessage():
     ## Display Crash
