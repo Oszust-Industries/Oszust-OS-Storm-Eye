@@ -1,6 +1,6 @@
 ## Oszust OS Storm Eye - Oszust Industries
 ## Created on: 12-16-21 - Last update: 3-28-21
-softwareVersion = "ALPHA-v1.0.1.022"
+softwareVersion = "ALPHA-v1.0.1.025"
 def clear(): return ("\n" * 70)
 from urllib.request import urlopen
 from pathlib import Path
@@ -94,14 +94,14 @@ def serverActions(Action):
 def checkUpdateStatus():
     global exitSystem
     ## Threading - Check Update Status
-    import time
+    import time, webbrowser
     while True:
         if AutoUpdater.UpdateStatus == 3:
             exitSystem = True
             exitText = input(clear() + "An emergency has been downloaded.\nThe update has fixed critical issues.\n\nPress any key to exit "+systemName+" and finish the installation...")
             exit()
         elif AutoUpdater.UpdateStatus in [1, 2]:
-            toaster.show_toast(systemName + ": New Update Installed", "Relaunch the app to finish the installation.", icon_path = str(Path(__file__).resolve().parent) + "\\DownloadIcon.ico", duration = 8, threaded = True)
+            toaster.show_toast(systemName + ": New Update Installed", "Relaunch the app to finish the installation.\n(Click to open the changelog.)", icon_path = str(Path(__file__).resolve().parent) + "\\DownloadIcon.ico", duration = 8, threaded = True, callback_on_click = webbrowser.open_new("https://github.com/Oszust-Industries/" + systemName.replace(" ", "-") + "/releases"))
             return "Update Cleared"
         elif AutoUpdater.UpdateStatus == -3:
             toaster.show_toast(systemName + ": AutoUpdater Failed", "A requested app build does not exist.", icon_path = str(Path(__file__).resolve().parent) + "\\DownloadIcon.ico", duration = 8, threaded = True)
