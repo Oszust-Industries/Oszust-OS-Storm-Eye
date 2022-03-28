@@ -1,6 +1,6 @@
 ## Oszust OS Storm Eye - Oszust Industries
 ## Created on: 12-16-21 - Last update: 3-27-21
-softwareVersion = "ALPHA-v1.0.1.004"
+softwareVersion = "ALPHA-v1.0.1.008"
 def clear(): return ("\n" * 70)
 from urllib.request import urlopen
 from pathlib import Path
@@ -72,9 +72,9 @@ def serverActions(Action):
             toaster = ToastNotifier()
         except:
             import time
-            exitText = (clear() + "A required package is missing and is being installed.\nPlease wait a few moments for the package to install.")
-            time.sleep(3)
-            exit()
+            exitText = input(clear() + "A required package is missing and is being installed.\nPlease wait a few moments for the package to install.\n\nPress any key to restart "+systemName+" and finish the installation.")
+            time.sleep(1)
+            os.execv(sys.executable, ['python'] + sys.argv)
     elif Action == "apiSetup":
         import webbrowser, uuid
         webbrowser.open("https://home.openweathermap.org/users/sign_up",  new = 2, autoraise = True)
@@ -100,8 +100,8 @@ def checkUpdateStatus():
     import time
     while True:
         if AutoUpdater.UpdateStatus == 3:
-            exitText = (clear() + "An emergency has been downloaded.\nThe update has fixed critical issues.\n\nPlease restart "+systemName+" to finish the installation.")
-            exit()
+            exitText = input(clear() + "An emergency has been downloaded.\nThe update has fixed critical issues.\n\nPress any key to restart "+systemName+" and finish the installation.")
+            os.execv(sys.executable, ['python'] + sys.argv)
         elif AutoUpdater.UpdateStatus in [1, 2]:
             toaster.show_toast(systemName + ": New Update Installed", "Relaunch the app to finish the update.", icon_path = str(Path(__file__).resolve().parent) + "\\DownloadIcon.ico", duration = 8, threaded = True, callback_on_click=notificationClickActions("restart"))
             return "Update Cleared"
