@@ -1,6 +1,6 @@
 ## Oszust OS Storm Eye - Oszust Industries
 ## Created on: 12-16-21 - Last update: 3-28-21
-softwareVersion = "ALPHA-v1.0.1.018"
+softwareVersion = "ALPHA-v1.0.1.020"
 def clear(): return ("\n" * 70)
 from urllib.request import urlopen
 from pathlib import Path
@@ -39,9 +39,9 @@ def softwareSetup():
     print("Loading...")
     softwareConfig()
     serverActions("wifiTest")
-    serverActions("startAchievementSystem")
     AutoUpdater.setupUpdate(systemName, appBuild, softwareVersion)
     serverActions("updateStatusCheckThreadStart")
+    serverActions("startAchievementSystem")
     if apiKey == "":
         serverActions("apiSetup")
         return
@@ -70,10 +70,7 @@ def serverActions(Action):
         try:
             from win10toast_click import ToastNotifier
             toaster = ToastNotifier()
-        except:
-            os.system("pip install win10toast-click -q")
-            exitText = input(clear() + "A required package is missing and was installed.\n\nPress any key to exit "+systemName+" and finish the installation.")
-            exit()
+        except: return "ERROR-Package_Missing"
     elif Action == "apiSetup":
         import webbrowser, uuid
         webbrowser.open("https://home.openweathermap.org/users/sign_up",  new = 2, autoraise = True)
