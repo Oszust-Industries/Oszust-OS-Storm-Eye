@@ -1,4 +1,4 @@
-## Oszust OS Storm Eye - AutoUpdater 2.1.0 - Oszust Industries
+## Oszust OS Storm Eye - AutoUpdater 2.1.1 - Oszust Industries
 from os import path, walk
 from pathlib import Path
 import os, shutil, threading, urllib.request, zipfile
