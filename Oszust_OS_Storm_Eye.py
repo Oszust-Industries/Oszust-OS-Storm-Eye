@@ -4,7 +4,8 @@ softwareVersion = "ALPHA-v1.0.1.025"
 def clear(): return ("\n" * 70)
 from urllib.request import urlopen
 from pathlib import Path
-import threading, datetime, json, os, pickle, sys
+import threading, datetime, json, os, pickle
+def openChangelog(): webbrowser.open_new("https://github.com/Oszust-Industries/" + systemName.replace(" ", "-") + "/releases")
 import AutoUpdater
 
 def softwareConfig():
@@ -101,7 +102,7 @@ def checkUpdateStatus():
             exitText = input(clear() + "An emergency has been downloaded.\nThe update has fixed critical issues.\n\nPress any key to exit "+systemName+" and finish the installation...")
             exit()
         elif AutoUpdater.UpdateStatus in [1, 2]:
-            toaster.show_toast(systemName + ": New Update Installed", "Relaunch the app to finish the installation.\n(Click to open the changelog.)", icon_path = str(Path(__file__).resolve().parent) + "\\DownloadIcon.ico", duration = 8, threaded = True, callback_on_click = webbrowser.open_new("https://github.com/Oszust-Industries/" + systemName.replace(" ", "-") + "/releases"))
+            toaster.show_toast(systemName + ": New Update Installed", "Relaunch the app to finish the installation.\n(Click to open the changelog.)", icon_path = str(Path(__file__).resolve().parent) + "\\DownloadIcon.ico", duration = 8, threaded = True, callback_on_click = openChangelog)
             return "Update Cleared"
         elif AutoUpdater.UpdateStatus == -3:
             toaster.show_toast(systemName + ": AutoUpdater Failed", "A requested app build does not exist.", icon_path = str(Path(__file__).resolve().parent) + "\\DownloadIcon.ico", duration = 8, threaded = True)
