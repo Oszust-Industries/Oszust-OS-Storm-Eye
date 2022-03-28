@@ -1,6 +1,6 @@
 ## Oszust OS Storm Eye - Oszust Industries
 ## Created on: 12-16-21 - Last update: 3-27-21
-softwareVersion = "ALPHA-v1.0.1.010"
+softwareVersion = "ALPHA-v1.0.1.013"
 def clear(): return ("\n" * 70)
 from urllib.request import urlopen
 from pathlib import Path
@@ -60,7 +60,7 @@ def serverActions(Action):
     elif Action == "noWifi":
         import random
         print(clear() + "There doesn't seem to be any internet connection on your device.\n" + systemName + " needs internet to display the weather.\n")
-        retry = input("\"" + random.choice(open("./Wifi text.txt").read().splitlines()) + "\"\n\nPress 'Enter' to retry the internet connection...")
+        retry = input("\"" + random.choice(open("./Wifi text.txt").read().splitlines()) + "\"\n\nPress any key to retry the internet connection...")
         print(clear())
         softwareSetup()
     elif Action == "updateStatusCheckThreadStart":
@@ -71,10 +71,9 @@ def serverActions(Action):
             from win10toast_click import ToastNotifier
             toaster = ToastNotifier()
         except:
-            import time
-            exitText = input(clear() + "A required package is missing and is being installed.\nPlease wait a few moments for the package to install.\n\nPress any key to restart "+systemName+" and finish the installation.")
             os.system("pip install win10toast-click -q")
-            os.execv(sys.executable, ['python'] + sys.argv)
+            exitText = input(clear() + "A required package is missing and was installed.\n\nPress any key to exit "+systemName+" and finish the installation.")
+            exit()
     elif Action == "apiSetup":
         import webbrowser, uuid
         webbrowser.open("https://home.openweathermap.org/users/sign_up",  new = 2, autoraise = True)
@@ -100,8 +99,8 @@ def checkUpdateStatus():
     import time
     while True:
         if AutoUpdater.UpdateStatus == 3:
-            exitText = input(clear() + "An emergency has been downloaded.\nThe update has fixed critical issues.\n\nPress any key to restart "+systemName+" and finish the installation.")
-            os.execv(sys.executable, ['python'] + sys.argv)
+            exitText = input(clear() + "An emergency has been downloaded.\nThe update has fixed critical issues.\n\nPress any key to exit "+systemName+" and finish the installation.")
+            exit()
         elif AutoUpdater.UpdateStatus in [1, 2]:
             toaster.show_toast(systemName + ": New Update Installed", "Relaunch the app to finish the update.", icon_path = str(Path(__file__).resolve().parent) + "\\DownloadIcon.ico", duration = 8, threaded = True, callback_on_click=notificationClickActions("restart"))
             return "Update Cleared"
@@ -112,7 +111,7 @@ def checkUpdateStatus():
         else: time.sleep(0.3)
 
 def notificationClickActions(Action):
-    if Action == "restart": os.execv(sys.executable, ['python'] + sys.argv)
+    if Action == "restart": exit()
 
 def crashMessage():
     ## Display Crash
