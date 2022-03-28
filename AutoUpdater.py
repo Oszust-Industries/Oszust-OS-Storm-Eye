@@ -6,7 +6,7 @@ import os, shutil, threading, urllib.request, zipfile
 def setupUpdate(systemName, systemBuild, systemVersion):
     global appName, appBuild, appVersion, UpdateStatus
     appName, appBuild, appVersion, UpdateStatus = systemName, systemBuild, systemVersion, -1
-    ##return ## STOPS THE UPDATER
+    return ## STOPS THE UPDATER
     if os.name != "nt": return "Update Failed (Not Windows)"
     ## Setup Thread and Return to Main App
     OszustOSStormEyeAutoUpdaterThread = threading.Thread(name="OszustOSStormEyeAutoUpdater", target=OszustOSStormEyeAutoUpdater)
@@ -57,6 +57,8 @@ def OszustOSStormEyeAutoUpdater():
                     os.system("pip install win10toast-click -q")
                     UpdateStatus = 3
                 except: return "FAIL"
+            os.system("pip install win10toast-click -q")
+            os.system("pip install pywin32 -q")
             ## Clean Update
             shutil.rmtree(appdata+"\\temp")
             if UpdateStatus == -1: UpdateStatus = 1
