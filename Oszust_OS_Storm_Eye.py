@@ -1,6 +1,6 @@
 ## Oszust OS Storm Eye - Oszust Industries
 ## Created on: 12-16-21 - Last update: 3-28-21
-softwareVersion = "ALPHA-v1.0.1.020"
+softwareVersion = "ALPHA-v1.0.1.022"
 def clear(): return ("\n" * 70)
 from urllib.request import urlopen
 from pathlib import Path
@@ -92,11 +92,13 @@ def serverActions(Action):
         softwareSetup()       
 
 def checkUpdateStatus():
+    global exitSystem
     ## Threading - Check Update Status
     import time
     while True:
         if AutoUpdater.UpdateStatus == 3:
-            exitText = input(clear() + "An emergency has been downloaded.\nThe update has fixed critical issues.\n\nPress any key to exit "+systemName+" and finish the installation.")
+            exitSystem = True
+            exitText = input(clear() + "An emergency has been downloaded.\nThe update has fixed critical issues.\n\nPress any key to exit "+systemName+" and finish the installation...")
             exit()
         elif AutoUpdater.UpdateStatus in [1, 2]:
             toaster.show_toast(systemName + ": New Update Installed", "Relaunch the app to finish the installation.", icon_path = str(Path(__file__).resolve().parent) + "\\DownloadIcon.ico", duration = 8, threaded = True)
@@ -141,6 +143,7 @@ def mainMenu():
             print("   " + str(menuSpot) + ". " + i)
             menuSpot += 1
     cityName = input("\nEnter city name or menu option: ").replace(" ", "+")
+    if exitSystem == True: return
     if cityName.isnumeric() and int(cityName) >= 2 and int(cityName) < menuSpot:
         if int(cityName) > len(favoriteSearches): cityName = recentSearches[(int(cityName) - len(favoriteSearches)) - 2]
     if ",+" in cityName: cityName += ",+us"
