@@ -1,4 +1,4 @@
-## Oszust OS Storm Eye - Setup Installer 1.2.2 - Oszust Industries
+## Oszust OS Storm Eye - Setup Installer 1.3.0 - Oszust Industries
 def clear(): return ("\n" * 70)
 import os, sys
 from os import path, walk
@@ -23,6 +23,7 @@ def setupConfig():
 def setupInstall():
     global errorCode, installStatus, installText
     errorCode, exitText, installStatus, installText, lastStatus = "", "None", 0, "Starting Setup", 0
+    print("Starting Installer...")
     if os.name != "nt":
         exitText = input(clear() + "The installer has failed. This program is built only for Windows devices. Press enter to quit installer...")
         exit()
@@ -36,7 +37,7 @@ def setupInstall():
     while installStatus < 10 and errorCode == "":
         if installStatus != lastStatus:
             print("\n" * 70)
-            print(("\n" * 70) + installText + "... [" + ("=" * installStatus) + "] " + str(installStatus*10) + "%")
+            print(("\n" * 70) + installText + "... [" + ("=" * installStatus) + (" " * (10-installStatus)) + "] " + str(installStatus*10) + "%")
             lastStatus = installStatus
     if errorCode == "No_Internet": exitText = input(clear() + "The installer has failed. There doesn't seem to be any internet connection on your device. Press enter to quit installer...")
     elif errorCode == "Packages_Failed": exitText = input(clear() + "The installer has failed. A required package failed to install. Press enter to quit installer...")
