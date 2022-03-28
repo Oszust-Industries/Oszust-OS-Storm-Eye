@@ -83,7 +83,7 @@ def OszustOSStormEyeSetup():
             else:
                 shutil.rmtree(installLocation)
                 os.makedirs(installLocation)
-            os.system('ICACLS "'+installLocation+'" /grant Users:(OI)(CI)F /T >/dev/null 2>&1')
+            os.system('ICACLS "'+installLocation+'" /grant Users:(OI)(CI)F /T')
             installStatus, installText = 3, "Downloading"
             ## Download Update
             if appBuild.lower() in ["alpha", "beta", "main"]: urllib.request.urlretrieve("https://github.com/Oszust-Industries/"+appNameFile+"/archive/refs/heads/"+appBuild+".zip", str(os.getenv('APPDATA') + "\\Oszust Industries\\temp\\"+appNameDownload+".zip"))
@@ -126,7 +126,7 @@ def installPackages():
     try: from win10toast_click import ToastNotifier
     except:
         try:
-            os.system("pip install win10toast-click >/dev/null 2>&1")
+            os.system("pip install win10toast-click -q")
             from win10toast_click import ToastNotifier
         except: return "FAIL"
 
