@@ -1,6 +1,6 @@
 ## Oszust OS Storm Eye - Oszust Industries
 ## Created on: 12-16-21 - Last update: 3-28-21
-softwareVersion = "ALPHA-v1.0.2.002"
+softwareVersion = "ALPHA-v1.0.2.003"
 def clear(): return ("\n" * 70)
 from urllib.request import urlopen
 from pathlib import Path
@@ -55,7 +55,7 @@ def serverActions(Action):
     global exitSystem, toaster, userAPIKey
     if Action == "wifiTest":
         from urllib.request import urlopen
-        try: urlopen("http://google.com", timeout=1)
+        try: urlopen("http://google.com", timeout=3)
         except: serverActions("noWifi")
     elif Action == "noWifi":
         import random
