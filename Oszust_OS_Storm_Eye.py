@@ -1,6 +1,6 @@
 ## Oszust OS Storm Eye - Oszust Industries
 ## Created on: 12-16-21 - Last update: 3-28-21
-softwareVersion = "ALPHA-v1.0.2.000"
+softwareVersion = "ALPHA-v1.0.2.002"
 def clear(): return ("\n" * 70)
 from urllib.request import urlopen
 from pathlib import Path
@@ -101,7 +101,7 @@ def checkUpdateStatus():
             exitText = input(clear() + "An emergency has been downloaded.\nThe update has fixed critical issues.\n\nPress any key to exit "+systemName+" and finish the installation...")
             exit()
         elif AutoUpdater.UpdateStatus in [1, 2]:
-            toaster.show_toast(systemName + ": New Update Installed", "Relaunch the app to finish the installation.\n(Click to open the changelog.)", icon_path = str(Path(__file__).resolve().parent) + "\\DownloadIcon.ico", duration = 8, threaded = True, callback_on_click = openChangelog)
+            toaster.show_toast(systemName + ": New Update Installed", "Relaunch the app to finish the installation.\n(Click to open the changelog.)", icon_path = str(Path(__file__).resolve().parent) + "\\DownloadIcon.ico", duration = 8, threaded = True, callback_on_click = openChangelog_NotificationAction)
             return "Update Cleared"
         elif AutoUpdater.UpdateStatus == -3:
             toaster.show_toast(systemName + ": AutoUpdater Failed", "A requested app build does not exist.", icon_path = str(Path(__file__).resolve().parent) + "\\DownloadIcon.ico", duration = 8, threaded = True)
@@ -109,9 +109,9 @@ def checkUpdateStatus():
         elif AutoUpdater.UpdateStatus in [-2, 0]: return "Update Cleared"
         else: time.sleep(0.3)
 
-def openChangelog():
+def openChangelog_NotificationAction():
     import webbrowser
-    webbrowser.open_new("https://github.com/Oszust-Industries/" + systemName.replace(" ", "-") + "/releases")
+    webbrowser.open("https://github.com/Oszust-Industries/" + systemName.replace(" ", "-") + "/releases",  new = 2, autoraise = True)
 
 def crashMessage():
     ## Display Crash
