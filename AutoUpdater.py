@@ -21,7 +21,7 @@ def OszustOSAutoUpdater():
         return "No Internet"
     try:
         appNameDownload, appNameFile, docFolder, current = appName.replace(" ", "_"), appName.replace(" ", "-"), os.getenv('APPDATA') + "\\Oszust Industries", str(pathlib.Path(__file__).resolve().parent)
-        if appBuild.lower() in availableBuilds:
+        if appBuild in availableBuilds:
             for line in urllib.request.urlopen("https://raw.githubusercontent.com/Oszust-Industries/"+appNameFile+"/"+appBuild+"/Version.txt"):
                 newestVersion = "".join([s for s in line.decode("utf-8") if s.strip("\r\n")])
         else:
