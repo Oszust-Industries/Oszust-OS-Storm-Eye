@@ -111,7 +111,7 @@ def OszustOSSetupInstaller():
         os.system('ICACLS "'+installLocation+'" /grant Users:(OI)(CI)F /T')
     ## Download Update
         installStatus, installText = 3, "Downloading"
-        urllib.request.urlretrieve("https://github.com/Oszust-Industries/"+appNameFile+"/archive/refs/heads/"+appBuild+".zip", (docFolder+"\\temp\\"+appNameDownload+".zip"))
+        urllib.request.urlretrieve("https://github.com/Oszust-Industries/" + appNameFile + "/archive/refs/heads/" + appBuild + ".zip", (docFolder + "\\temp\\" + appNameDownload + ".zip"))
         installStatus, installText = 5, "Extracting Files"
         with zipfile.ZipFile(docFolder+"\\temp\\"+appNameDownload+".zip", 'r') as zip_ref: zip_ref.extractall(docFolder + "\\temp")
         os.remove(docFolder + "\\temp\\" + appNameDownload + ".zip")
