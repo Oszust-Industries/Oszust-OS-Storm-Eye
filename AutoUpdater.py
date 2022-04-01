@@ -37,7 +37,7 @@ def OszustOSAutoUpdater():
                 shutil.rmtree(docFolder + "\\temp")
                 os.mkdir(docFolder + "\\temp")
         ## Download Update
-            if appBuild.lower() in availableBuilds: urllib.request.urlretrieve("https://github.com/Oszust-Industries/"+appNameFile+"/archive/refs/heads/"+appBuild+".zip", str(os.getenv('APPDATA') + "\\Oszust Industries\\temp\\"+appNameDownload+".zip"))
+            urllib.request.urlretrieve("https://github.com/Oszust-Industries/" + appNameFile + "/archive/refs/heads/" + appBuild + ".zip", (docFolder + "\\temp\\" + appNameDownload + ".zip"))
             with zipfile.ZipFile(docFolder + "\\temp\\"+appNameDownload+".zip", 'r') as zip_ref: zip_ref.extractall(docFolder + "\\temp")
             os.remove(docFolder + "\\temp\\" + appNameDownload + ".zip")
             if appBuild.lower() != "main": os.rename(docFolder + "\\temp\\"+appNameFile+"-"+appBuild, docFolder + "\\temp\\"+appNameFile+"-Main")
