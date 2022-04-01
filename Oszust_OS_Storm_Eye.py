@@ -1,37 +1,37 @@
 ## Oszust OS Storm Eye - Oszust Industries
-## Created on: 12-16-21 - Last update: 3-28-21
-softwareVersion = "ALPHA-v1.0.2.005"
+## Created on: 12-16-21 - Last update: 4-01-21
+softwareVersion = "ALPHA-v1.1.0.000"
 def clear(): return ("\n" * 70)
-from urllib.request import urlopen
-from pathlib import Path
-import threading, datetime, json, os, pickle
+from win32com.shell import shell, shellcon
+import datetime, json, os, pathlib, pickle, threading, urllib.request
+import PySimpleGUI as sg
 import AutoUpdater
 
 def softwareConfig():
     import uuid
     ## System Configuration
-    global appBuild, appdata, deactivateFileOpening, exitSystem, resetSettings, systemName, MeasurementUnits, HourlyForecastScale, apiKey, recentSearches
-    appdata, systemName, exitSystem = os.getenv('APPDATA') + "\\Oszust Industries\\", "Oszust OS Storm Eye", False
+    global HourlyForecastScale, MeasurementUnits, apiKey, appBuild, deactivateFileOpening, docFolder, exitSystem, recentSearches, resetSettings, systemName
+    docFolder, exitSystem, systemName = shell.SHGetFolderPath(0, shellcon.CSIDL_PERSONAL, None, 0) + "\\Oszust Industries\\", False, "Oszust OS Storm Eye"
     try:
-        configFile = json.load(open(appdata + systemName + "\\Config.json",))
+        configFile = json.load(open(docFolder + systemName + "\\Config.json",))
         appBuild, apiKey, resetSettings, deactivateFileOpening, MeasurementUnits, HourlyForecastScale = configFile["appBuild"], configFile["userAPIKey"], configFile["resetSettings"], configFile["deactivateFileOpening"], configFile["MeasurementUnits"], configFile["HourlyForecastScale"]
     except:
         ## Create new .json file for configs
-        if os.path.isfile(appdata + systemName + "\\Config.json") == False:
-            with open(appdata + systemName + "\\Config.json", 'w') as f: json.dump({}, f, indent=4)
-        with open(appdata + systemName + "\\Config.json", 'r') as f:
+        if os.path.isfile(docFolder + systemName + "\\Config.json") == False:
+            with open(docFolder + systemName + "\\Config.json", 'w') as f: json.dump({}, f, indent=4)
+        with open(docFolder + systemName + "\\Config.json", 'r') as f:
             data = json.load(f)
             data = {"appBuild": "Alpha","userAPIKey": "","resetSettings": False,"deactivateFileOpening": False,"MeasurementUnits": "Imperial","HourlyForecastScale": 12}
-            tempfile = os.path.join(os.path.dirname(appdata + systemName + "\\Config.json"), str(uuid.uuid4()))
+            tempfile = os.path.join(os.path.dirname(docFolder + systemName + "\\Config.json"), str(uuid.uuid4()))
         with open(tempfile, 'w') as f: json.dump(data, f, indent=4)
-        os.remove(appdata + systemName + "\\Config.json")
-        os.rename(tempfile, appdata + systemName + "\\Config.json")
+        os.remove(docFolder + systemName + "\\Config.json")
+        os.rename(tempfile, docFolder + systemName + "\\Config.json")
         softwareConfig()
     try:
-        recentSearches = pickle.load(open(appdata + systemName + "\\Recent.p", "rb"))
+        recentSearches = pickle.load(open(docFolder + systemName + "\\Recent.p", "rb"))
     except:
         recentSearches = []
-        pickle.dump(recentSearches, open(appdata + systemName + "\\Recent.p", "wb"))
+        pickle.dump(recentSearches, open(docFolder + systemName + "\\Recent.p", "wb"))
 
 def softwareSetup():
     ## Setup Software
@@ -54,8 +54,7 @@ def softwareSetup():
 def serverActions(Action):
     global exitSystem, toaster, userAPIKey
     if Action == "wifiTest":
-        from urllib.request import urlopen
-        try: urlopen("http://google.com", timeout=3)
+        try: urllib.request.urlopen("http://google.com", timeout=3)
         except: serverActions("noWifi")
     elif Action == "noWifi":
         import random
@@ -80,15 +79,15 @@ def serverActions(Action):
         print("\n3. In the 'Create Key' column, type 'Oszust OS Storm Eye' in the 'API key name' box. Click the generate button.")
         print("\n4. Copy the long key from under the key column to the input below. Press 'Enter' when done.\n\nNOTE: You must wait about five minutes for the key to register.")
         userAPIKey = input("\n\nYour API Key Here: ").lower().replace(" ", "")
-        if os.path.isfile(appdata + systemName + "\\Config.json") == False:
-            with open(appdata + systemName + "\\Config.json", 'w') as f: json.dump({}, f, indent=4)
-        with open(appdata + systemName + "\\Config.json", 'r') as f:
+        if os.path.isfile(docFolder + systemName + "\\Config.json") == False:
+            with open(docFolder + systemName + "\\Config.json", 'w') as f: json.dump({}, f, indent=4)
+        with open(docFolder + systemName + "\\Config.json", 'r') as f:
             data = json.load(f)
             data["userAPIKey"] = userAPIKey
-            tempfile = os.path.join(os.path.dirname(appdata + systemName + "\\Config.json"), str(uuid.uuid4()))
+            tempfile = os.path.join(os.path.dirname(docFolder + systemName + "\\Config.json"), str(uuid.uuid4()))
         with open(tempfile, 'w') as f: json.dump(data, f, indent=4)
-        os.remove(appdata + systemName + "\\Config.json")
-        os.rename(tempfile, appdata + systemName + "\\Config.json")
+        os.remove(docFolder + systemName + "\\Config.json")
+        os.rename(tempfile, docFolder + systemName + "\\Config.json")
         softwareSetup()       
 
 def checkUpdateStatus():
@@ -101,10 +100,10 @@ def checkUpdateStatus():
             exitText = input(clear() + "An emergency has been downloaded.\nThe update has fixed critical issues.\n\nPress any key to exit "+systemName+" and finish the installation...")
             exit()
         elif AutoUpdater.UpdateStatus in [1, 2]:
-            toaster.show_toast(systemName + ": New Update Installed", "Relaunch the app to finish the installation.\n(Click to open the changelog.)", icon_path = str(Path(__file__).resolve().parent) + "\\DownloadIcon.ico", duration = 8, threaded = True, callback_on_click = openChangelogNotificationAction)
+            toaster.show_toast(systemName + ": New Update Installed", "Relaunch the app to finish the installation.\n(Click to open the changelog.)", icon_path = str(pathlib.Path(__file__).resolve().parent) + "\\DownloadIcon.ico", duration = 8, threaded = True, callback_on_click = openChangelogNotificationAction)
             return "Update Cleared"
         elif AutoUpdater.UpdateStatus == -3:
-            toaster.show_toast(systemName + ": AutoUpdater Failed", "A requested app build does not exist.", icon_path = str(Path(__file__).resolve().parent) + "\\DownloadIcon.ico", duration = 8, threaded = True)
+            toaster.show_toast(systemName + ": AutoUpdater Failed", "A requested app build does not exist.", icon_path = str(pathlib.Path(__file__).resolve().parent) + "\\DownloadIcon.ico", duration = 8, threaded = True)
             return "Update Failed"
         elif AutoUpdater.UpdateStatus in [-2, 0]: return "Update Cleared"
         else: time.sleep(0.3)
@@ -125,9 +124,27 @@ def crashMessage():
         except Exception as Argument: crashMessage()
     else: exit()
 
+def NEWmainMenu():
+    sg.theme("DarkAmber")
+    layout = [  [sg.Text("Enter City Name:",key="CityInputText"), sg.Input("",key="CityInput"), sg.Button("Search",key="cityInputButton", button_color=("White", "Green"))],
+                [sg.Button("Quit", button_color=("White", "Red"))]    
+             ]
+    window = sg.Window(systemName, layout).Finalize()
+    window.Maximize()
+    window["CityInput"].bind("<Return>", "_Enter")
+    while True:
+        event, values = window.read()
+        if event == sg.WIN_CLOSED or event == "Quit":
+            break
+        elif (event == "CityInput" + "_Enter") or event == "cityInputButton":
+            cityName = values["CityInput"]
+            if ",+" in cityName: cityName += ",+us"
+            basicWeather(cityName.replace(" ", "+"))
+            window.close()
+
 def mainMenu():
     global recentSearches
-    pickle.dump(recentSearches, open(appdata + systemName + "\\Recent.p", "wb"))
+    pickle.dump(recentSearches, open(docFolder + systemName + "\\Recent.p", "wb"))
     menuSpot = 2
     favoriteSearches = []
     if "ALPHA" in softwareVersion: print(systemName + " " + softwareVersion + "\nCreated and published by Oszust Industries\n\n")
@@ -157,9 +174,9 @@ def basicWeather(searchCityName):
     global hourly, recentSearches
     try:
         print("\nLoading Weather...")
-        weatherData = json.loads(urlopen("http://api.openweathermap.org/data/2.5/weather?appid=" + apiKey + "&units=imperial&q=" + searchCityName).read())
+        weatherData = json.loads(urllib.request.urlopen("http://api.openweathermap.org/data/2.5/weather?appid=" + apiKey + "&units=imperial&q=" + searchCityName).read())
         coord = weatherData["coord"]
-        ForecastData = json.loads(urlopen("https://api.openweathermap.org/data/2.5/onecall?lat=" + str(coord["lat"]) + "&lon=" + str(coord["lon"]) + "&units=imperial&appid=" + apiKey).read())
+        ForecastData = json.loads(urllib.request.urlopen("https://api.openweathermap.org/data/2.5/onecall?lat=" + str(coord["lat"]) + "&lon=" + str(coord["lon"]) + "&units=imperial&appid=" + apiKey).read())
         hourly = ForecastData["hourly"]
         main = weatherData["main"]
         coord = weatherData["coord"]
@@ -176,6 +193,16 @@ def basicWeather(searchCityName):
         timeZone = str([ s[0] for s in ((datetime.datetime.now().astimezone()).tzinfo).tzname((datetime.datetime.now()).astimezone()).split() ]).replace("'", "").replace("[", "").replace("]", "").replace(",", "").replace(" ", "")
         citySunset = datetime.datetime.fromtimestamp(weatherData["sys"]["sunset"]+60).strftime("%I:%M %p %Z%z") + timeZone
         citySunrise = datetime.datetime.fromtimestamp(weatherData["sys"]["sunrise"]+60).strftime("%I:%M %p %Z%z") + timeZone
+    ##Screen
+        if cityWeatherDescription[-1] == "s": cityWeather = (str(cityTemp) + u"\N{DEGREE SIGN}" + " with " + str(cityWeatherDescription).capitalize())
+        else: cityWeather = (str(cityTemp) + u"\N{DEGREE SIGN}" + " with a " + str(cityWeatherDescription).capitalize())
+ ##
+ ##        layout = [  [sg.Image(r"C:\Users\soszu\Pictures\Youtube\Disneyhockey40 logo 2020-crop.png", size=(20,20)), sg.Text("Location: ",key="CityInputText",text_color="White"), sg.Text(cityName,key="f",text_color="White")],
+ ##                    [sg.Text(cityWeather,key="f",text_color="White",font=("Helvetica", 18))]    
+ ##                ]
+ ##        window = sg.Window(systemName, layout).Finalize()
+ ##       window.Maximize()
+ ##        while True: event, values = window.read()
         print(clear())
         print(str(cityName) + ":\n")
         if cityWeatherDescription[-1] == "s": print(str(cityTemp) + u"\N{DEGREE SIGN}" + " with " + str(cityWeatherDescription).capitalize())
