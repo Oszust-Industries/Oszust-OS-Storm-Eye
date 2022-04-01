@@ -4,7 +4,7 @@ import os, pathlib, shutil, threading, urllib.request, urllib.request, zipfile
 def setupUpdate(systemName, systemBuild, systemVersion):
     global UpdateStatus, appBuild, appName, appVersion, availableBuilds
     UpdateStatus, appBuild, appName, appVersion, availableBuilds = -1, systemBuild, systemName, systemVersion, ["Alpha"]
-    return ## STOPS THE UPDATER
+    ##return ## STOPS THE UPDATER
     if os.name != "nt": return "Update Failed (Not Windows)"
     ## Setup Thread and Return to Main App
     OszustOSAutoUpdaterThread = threading.Thread(name="OszustOSAutoUpdater", target=OszustOSAutoUpdater)
