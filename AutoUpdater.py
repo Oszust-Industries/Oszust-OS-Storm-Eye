@@ -1,30 +1,27 @@
-## Oszust OS Storm Eye - AutoUpdater 2.2.0 - Oszust Industries
-from os import path, walk
-from pathlib import Path
-import os, shutil, threading, urllib.request, zipfile
+## Oszust OS Storm Eye - AutoUpdater 2.3.0 - Oszust Industries
+import os, shutil, threading, urllib.request, urllib.request, zipfile
 
 def setupUpdate(systemName, systemBuild, systemVersion):
-    global appName, appBuild, appVersion, UpdateStatus
-    appName, appBuild, appVersion, UpdateStatus = systemName, systemBuild, systemVersion, -1
+    global UpdateStatus, appBuild, appName, appVersion, availableBuilds
+    UpdateStatus, appBuild, appName, appVersion, availableBuilds = -1, systemBuild, systemName, systemVersion, ["Alpha"]
     ##return ## STOPS THE UPDATER
     if os.name != "nt": return "Update Failed (Not Windows)"
     ## Setup Thread and Return to Main App
-    OszustOSStormEyeAutoUpdaterThread = threading.Thread(name="OszustOSStormEyeAutoUpdater", target=OszustOSStormEyeAutoUpdater)
-    OszustOSStormEyeAutoUpdaterThread.start()
+    OszustOSAutoUpdaterThread = threading.Thread(name="OszustOSAutoUpdater", target=OszustOSAutoUpdater)
+    OszustOSAutoUpdaterThread.start()
     return "Running Updater"
 
-def OszustOSStormEyeAutoUpdater():
+def OszustOSAutoUpdater():
     global UpdateStatus
     ## Threading - Auto Update App
     ## Update statuses: -3 - No AppBuild, -2 - No Internet, 0 - None, 1 - Normal Update, 2 - Hotfix, 3 - LOCK
-    from urllib.request import urlopen
-    try: urlopen("http://google.com", timeout=1)
+    try: urllib.request.urlopen("http://google.com", timeout=3)
     except:
         UpdateStatus = -2
         return "No Internet"
     try:
-        appNameDownload, appNameFile, appdata, current = appName.replace(" ", "_"), appName.replace(" ", "-"), os.getenv('APPDATA') + "\\Oszust Industries", str(Path(__file__).resolve().parent)
-        if appBuild.lower() in ["alpha", "beta", "main"]:
+        appNameDownload, appNameFile, docFolder, current = appName.replace(" ", "_"), appName.replace(" ", "-"), os.getenv('APPDATA') + "\\Oszust Industries", str(pathlib.Path(__file__).resolve().parent)
+        if appBuild.lower() in availableBuilds:
             for line in urllib.request.urlopen("https://raw.githubusercontent.com/Oszust-Industries/"+appNameFile+"/"+appBuild+"/Version.txt"):
                 newestVersion = "".join([s for s in line.decode("utf-8") if s.strip("\r\n")])
         else:
@@ -33,34 +30,29 @@ def OszustOSStormEyeAutoUpdater():
         if newestVersion != appVersion:
             if "hotfix" in newestVersion.lower(): UpdateStatus = 2
             elif "emergency" in newestVersion.lower(): UpdateStatus = 3
-            ## Create Temp Folder for Update in Appdata
-            if path.exists(appdata) == False: os.mkdir(appdata)
-            if path.exists(appdata+"\\temp") == False: os.mkdir(appdata + "\\temp")
+        ## Create Temp Folder for Update in Appdata
+            if os.path.exists(docFolder) == False: os.mkdir(docFolder)
+            if os.path.exists(docFolder + "\\temp") == False: os.mkdir(docFolder + "\\temp")
             else:
-                shutil.rmtree(appdata+"\\temp")
-                os.mkdir(appdata+"\\temp")
-            ## Download Update
-            if appBuild.lower() in ["alpha", "beta", "main"]: urllib.request.urlretrieve("https://github.com/Oszust-Industries/"+appNameFile+"/archive/refs/heads/"+appBuild+".zip", str(os.getenv('APPDATA') + "\\Oszust Industries\\temp\\"+appNameDownload+".zip"))
-            with zipfile.ZipFile(appdata+"\\temp\\"+appNameDownload+".zip", 'r') as zip_ref: zip_ref.extractall(appdata+"\\temp")
-            os.remove(appdata + "\\temp\\"+appNameDownload+".zip")
-            if appBuild.lower() in ["alpha", "beta"]: os.rename(appdata +"\\temp\\"+appNameFile+"-"+appBuild, appdata +"\\temp\\"+appNameFile+"-Main")
-            ## Update Required Files
-            filenames = next(walk(appdata+"\\temp\\"+appNameFile+"-Main\\"), (None, None, []))[2]
+                shutil.rmtree(docFolder + "\\temp")
+                os.mkdir(docFolder + "\\temp")
+        ## Download Update
+            if appBuild.lower() in availableBuilds: urllib.request.urlretrieve("https://github.com/Oszust-Industries/"+appNameFile+"/archive/refs/heads/"+appBuild+".zip", str(os.getenv('APPDATA') + "\\Oszust Industries\\temp\\"+appNameDownload+".zip"))
+            with zipfile.ZipFile(docFolder + "\\temp\\"+appNameDownload+".zip", 'r') as zip_ref: zip_ref.extractall(docFolder + "\\temp")
+            os.remove(docFolder + "\\temp\\" + appNameDownload + ".zip")
+            if appBuild.lower() != "main": os.rename(docFolder + "\\temp\\"+appNameFile+"-"+appBuild, docFolder + "\\temp\\"+appNameFile+"-Main")
+        ## Update Required Files
+            filenames = next(os.walk(docFolder + "\\temp\\" + appNameFile + "-Main\\"), (None, None, []))[2]
             for i in filenames:
-                try: os.remove(current+"\\"+i)
+                try: os.remove(current + "\\" + i)
                 except: pass
-                shutil.move(appdata+"\\temp\\"+appNameFile+"-Main\\" + i, current)
-            ## Insall/Update Required Packages
-            try: from win10toast_click import ToastNotifier
-            except:
-                try:
-                    os.system("pip install win10toast-click -q")
-                    UpdateStatus = 3
-                except: return "FAIL"
-            os.system("pip install win10toast-click -q")
-            os.system("pip install pywin32 -q")
-            ## Clean Update
-            shutil.rmtree(appdata+"\\temp")
+                shutil.move(docFolder + "\\temp\\" + appNameFile + "-Main\\" + i, current)
+        ## Install/Update Required Packages
+            os.system('pip install pywin32 -q')
+            os.system('pip install win10toast-click -q')
+            os.system('pip install pysimplegui -q')
+        ## Clean Update
+            shutil.rmtree(docFolder + "\\temp")
             if UpdateStatus == -1: UpdateStatus = 1
         else: UpdateStatus = 0
     except Exception as Argument: print("Update Failed (" + str(Argument) + ")")
