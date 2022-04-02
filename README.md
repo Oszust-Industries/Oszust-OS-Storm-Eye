@@ -30,9 +30,11 @@ Developer: [Oszust Industries](https://github.com/Oszust-Industries)
 * Read/write saves on your computer.
 * Send notifications
 
-<br /> This software uses AutoUpdater 2.2 (*Updates are auto-checked and installed*)
+<br /> This software uses AutoUpdater 2.3 (*Updates are auto-checked and installed*)
 
 ##
+
+This software uses [PySimpleGUI](https://github.com/PySimpleGUI/PySimpleGUI) to display an interface.
 
 This software uses [Windows 10 Toast-Click](https://pypi.org/project/win10toast-click/) package to display notifications.
 
