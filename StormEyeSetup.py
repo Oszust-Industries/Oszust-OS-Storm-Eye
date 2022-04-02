@@ -124,9 +124,9 @@ def OszustOSSetupInstaller():
             shutil.move(docFolder + "\\temp\\" + appNameFile + "-Main\\" + i, installLocation)
     ## Create Shortcut
         installStatus, installText = 7, "Creating Shortcut"
-        try: os.remove(objShell.SpecialFolders("AllUsersPrograms") + "\\Oszust Industries\\" + uninstallerPath.split("\\")[-1] + ".lnk") ## Delete Start Menu Shortcut
+        try: os.remove(objShell.SpecialFolders("AllUsersPrograms") + "\\Oszust Industries\\" + appName + ".lnk") ## Delete Start Menu Shortcut
         except: pass
-        try: os.remove(shell.SHGetFolderPath (0, shellcon.CSIDL_DESKTOP, 0, 0) + "\\" + uninstallerPath.split("\\")[-1] + ".lnk") ## Delete Desktop Shortcut
+        try: os.remove(shell.SHGetFolderPath (0, shellcon.CSIDL_DESKTOP, 0, 0) + "\\" + appName + ".lnk") ## Delete Desktop Shortcut
         except: pass
         if os.path.exists(objShell.SpecialFolders("AllUsersPrograms") + "\\Oszust Industries") == False: os.mkdir(objShell.SpecialFolders("AllUsersPrograms") + "\\Oszust Industries")
         try:
