@@ -1,13 +1,13 @@
-## Oszust OS Storm Eye - Setup Installer 2.0.0 - Oszust Industries
-installerVersion = "v2.0.0"
+## Oszust OS Storm Eye - Setup Installer 2.1.0 - Oszust Industries
+installerVersion = "v2.1.0"
 import os, sys
 def fixPython():
     print("Installing Python Packages...")
-    try: os.system('pip install pywin32 -q')
+    try: os.system('py -3 -m install pywin32 -q')
     except:
         exitText = input("Error 01: The installer has failed. You seem to not have the correct Python installed. Press enter to quit installer...")
         exit()
-    try: os.system('pip install pysimplegui -q')
+    try: os.system('py -3 -m install pysimplegui -q')
     except:
         exitText = input("Error 02: The installer has failed. You seem to not have the correct Python installed. Press enter to quit installer...")
         exit()
@@ -149,11 +149,11 @@ def OszustOSSetupInstaller():
 
 def installPackages():
     try:
-        os.system('pip install win10toast-click -q')
+        os.system('py -3 -m install win10toast-click -q')
         from win10toast_click import ToastNotifier
     except: return "FAIL"
     try:
-        os.system('pip install pysimplegui -q')
+        os.system('py -3 -m install pysimplegui -q')
         import PySimpleGUI as sg
     except: return "FAIL"
 
