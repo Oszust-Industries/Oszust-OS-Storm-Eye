@@ -1,6 +1,6 @@
 ## Oszust OS Storm Eye - Oszust Industries
-## Created on: 12-16-21 - Last update: 4-01-21
-softwareVersion = "ALPHA-v1.1.0.002"
+## Created on: 12-16-21 - Last update: 4-12-21
+softwareVersion = "ALPHA-v1.1.0.004"
 def clear(): return ("\n" * 70)
 from win32com.shell import shell, shellcon
 import datetime, json, os, pathlib, pickle, threading, urllib.request
@@ -196,13 +196,12 @@ def basicWeather(searchCityName):
     ##Screen
         if cityWeatherDescription[-1] == "s": cityWeather = (str(cityTemp) + u"\N{DEGREE SIGN}" + " with " + str(cityWeatherDescription).capitalize())
         else: cityWeather = (str(cityTemp) + u"\N{DEGREE SIGN}" + " with a " + str(cityWeatherDescription).capitalize())
- ##
- ##        layout = [  [sg.Image(r"C:\Users\soszu\Pictures\Youtube\Disneyhockey40 logo 2020-crop.png", size=(20,20)), sg.Text("Location: ",key="CityInputText",text_color="White"), sg.Text(cityName,key="f",text_color="White")],
- ##                    [sg.Text(cityWeather,key="f",text_color="White",font=("Helvetica", 18))]    
- ##                ]
- ##        window = sg.Window(systemName, layout).Finalize()
- ##       window.Maximize()
- ##        while True: event, values = window.read()
+        #layout = [  [sg.Image(r"C:\Users\soszu\Pictures\Youtube\Disneyhockey40 logo 2020-crop.png", size=(20,20)), sg.Text("Location: ",key="CityInputText",text_color="White"), sg.Text(cityName,key="f",text_color="White")],
+                    #[sg.Text(cityWeather,key="f",text_color="White",font=("Helvetica", 18))]    
+                  #]
+        #window = sg.Window(systemName, layout).Finalize()
+        #window.Maximize()
+        #while True: event, values = window.read()
         print(clear())
         print(str(cityName) + ":\n")
         if cityWeatherDescription[-1] == "s": print(str(cityTemp) + u"\N{DEGREE SIGN}" + " with " + str(cityWeatherDescription).capitalize())
