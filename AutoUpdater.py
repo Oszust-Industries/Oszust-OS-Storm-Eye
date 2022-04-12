@@ -4,7 +4,7 @@ import os, pathlib, shutil, threading, urllib.request, urllib.request, zipfile
 def setupUpdate(systemName, systemBuild, systemVersion):
     global UpdateStatus, appBuild, appName, appVersion, availableBuilds
     UpdateStatus, appBuild, appName, appVersion, availableBuilds = -1, systemBuild, systemName, systemVersion, ["Alpha"]
-    ##return ## STOPS THE UPDATER
+    return ## STOPS THE UPDATER
     if os.name != "nt": return "Update Failed (Not Windows)"
     ## Setup Thread and Return to Main App
     OszustOSAutoUpdaterThread = threading.Thread(name="OszustOSAutoUpdater", target=OszustOSAutoUpdater)
@@ -48,9 +48,11 @@ def OszustOSAutoUpdater():
                 except: pass
                 shutil.move(docFolder + "\\temp\\" + appNameFile + "-Main\\" + i, current)
         ## Install/Update Required Packages
-            os.system('pip install pywin32 -q')
-            os.system('pip install win10toast-click -q')
-            os.system('pip install pysimplegui -q')
+            os.system('py -m pip install --upgrade pip setuptools > /dev/null')
+            os.system('py -m pip install pywin32 > /dev/null')
+            os.system('py -m pip install win10toast-click > /dev/null')
+            os.system('py -m pip install pysimplegui > /dev/null')
+            os.system('py -m pip install requests > /dev/null')
         ## Clean Update
             shutil.rmtree(docFolder + "\\temp")
             if UpdateStatus == -1: UpdateStatus = 1
