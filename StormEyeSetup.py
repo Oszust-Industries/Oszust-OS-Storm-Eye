@@ -1,14 +1,20 @@
-## Oszust OS Storm Eye - Setup Installer 2.1.1 - Oszust Industries
-installerVersion = "v2.1.1"
-import os, sys
+## Oszust OS Storm Eye - Setup Installer 2.1.2 - Oszust Industries
+installerVersion = "v2.1.2"
+import os, subprocess, sys
 def fixPython():
     print("Installing Python Packages...")
-    os.system('py -m pip install --upgrade pip setuptools > /dev/null')
-    try: os.system('py -m pip install pywin32 > /dev/null')
+    install = "Python"
+    try: subprocess.run(['py -m pip install --upgrade pip setuptools > /dev/null'], check = True)
+    except: install = "Windows"
+    try:
+        if install == "Python": os.system('py -m pip install pywin32 > /dev/null')
+        elif install == "Windows": os.system('pip install pywin32 -q')
     except:
         exitText = input("Error 01: The installer has failed. You seem to not have the correct Python installed. Press enter to quit installer...")
         exit()
-    try: os.system('py -m pip install pysimplegui > /dev/null')
+    try:
+        if install == "Python": os.system('py -m pip install pysimplegui > /dev/null')
+        elif install == "Windows": os.system('pip install pysimplegui -q')
     except:
         exitText = input("Error 02: The installer has failed. You seem to not have the correct Python installed. Press enter to quit installer...")
         exit()
@@ -83,12 +89,12 @@ def setupInstall():
     while True:
         event, values = window.read()
         if event == sg.WIN_CLOSED or event == 'DoneButton':
-            os.remove(__file__)
+            if (os.path.dirname(__file__)).split("\\")[-1] == "Oszust-OS-Storm-Eye-main": shutil.rmtree(os.path.dirname(__file__))
+            else: os.remove(__file__)
             exit()
 
 def OszustOSSetupInstaller():
     global errorCode, installStatus, installText
-    ## Threading - Installer
     installStatus, installText = 1, "Checking Internet"
     try: urllib.request.urlopen("http://google.com", timeout=3)
     except:
@@ -149,13 +155,17 @@ def OszustOSSetupInstaller():
         installStatus, installText = 10, "Done"
 
 def installPackages():
-    os.system('py -m pip install --upgrade pip setuptools > /dev/null')
-    try: os.system('py -m pip install win10toast-click > /dev/null')
-    except: return "FAIL"
-    try: os.system('py -m pip install pysimplegui > /dev/null')
-    except: return "FAIL"
-    try: os.system('py -m pip install requests > /dev/null')
-    except: return "FAIL"
+    try:
+        subprocess.run(['py -m pip install --upgrade pip setuptools > /dev/null'], check = True)
+        os.system('py -m pip install win10toast-click > /dev/null')
+        os.system('py -m pip install pysimplegui > /dev/null')
+        os.system('py -m pip install requests > /dev/null')
+    except:
+        try:
+            os.system('pip install win10toast-click -q')
+            os.system('pip install pysimplegui -q')
+            os.system('pip install requests -q')
+        except: return "FAIL"
 
 
 ## Start System
