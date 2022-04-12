@@ -1,10 +1,10 @@
-## Oszust OS Storm Eye - AutoUpdater 2.3.0 - Oszust Industries
-import os, pathlib, shutil, threading, urllib.request, urllib.request, zipfile
+## Oszust OS Storm Eye - AutoUpdater 2.3.1 - Oszust Industries
+import os, pathlib, shutil, subprocess, threading, urllib.request, urllib.request, zipfile
 
 def setupUpdate(systemName, systemBuild, systemVersion):
     global UpdateStatus, appBuild, appName, appVersion, availableBuilds
     UpdateStatus, appBuild, appName, appVersion, availableBuilds = -1, systemBuild, systemName, systemVersion, ["Alpha"]
-    return ## STOPS THE UPDATER
+    ##return ## STOPS THE UPDATER
     if os.name != "nt": return "Update Failed (Not Windows)"
     ## Setup Thread and Return to Main App
     OszustOSAutoUpdaterThread = threading.Thread(name="OszustOSAutoUpdater", target=OszustOSAutoUpdater)
@@ -13,7 +13,6 @@ def setupUpdate(systemName, systemBuild, systemVersion):
 
 def OszustOSAutoUpdater():
     global UpdateStatus
-    ## Threading - Auto Update App
     ## Update statuses: -3 - No AppBuild, -2 - No Internet, 0 - None, 1 - Normal Update, 2 - Hotfix, 3 - LOCK
     try: urllib.request.urlopen("http://google.com", timeout=3)
     except:
@@ -48,11 +47,17 @@ def OszustOSAutoUpdater():
                 except: pass
                 shutil.move(docFolder + "\\temp\\" + appNameFile + "-Main\\" + i, current)
         ## Install/Update Required Packages
-            os.system('py -m pip install --upgrade pip setuptools > /dev/null')
-            os.system('py -m pip install pywin32 > /dev/null')
-            os.system('py -m pip install win10toast-click > /dev/null')
-            os.system('py -m pip install pysimplegui > /dev/null')
-            os.system('py -m pip install requests > /dev/null')
+            try:
+                subprocess.run(['py -m pip install --upgrade pip setuptools > /dev/null'], check = True)
+                os.system('py -m pip install pywin32 > /dev/null')
+                os.system('py -m pip install win10toast-click > /dev/null')
+                os.system('py -m pip install pysimplegui > /dev/null')
+                os.system('py -m pip install requests > /dev/null')
+            except:
+                os.system('pip install pywin32 -q')
+                os.system('pip install win10toast-click -q')
+                os.system('pip install pysimplegui -q')
+                os.system('pip install requests -q')
         ## Clean Update
             shutil.rmtree(docFolder + "\\temp")
             if UpdateStatus == -1: UpdateStatus = 1
