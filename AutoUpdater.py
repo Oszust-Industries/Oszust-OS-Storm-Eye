@@ -49,13 +49,11 @@ def OszustOSAutoUpdater():
         ## Install/Update Required Packages
             try:
                 subprocess.run(['py -m pip install --upgrade pip setuptools > /dev/null'], check = True)
-                print("Nope")
                 os.system('py -m pip install pywin32 > /dev/null')
                 os.system('py -m pip install win10toast-click > /dev/null')
                 os.system('py -m pip install pysimplegui > /dev/null')
                 os.system('py -m pip install requests > /dev/null')
             except:
-                print("Here")
                 os.system('pip install pywin32 -q')
                 os.system('pip install win10toast-click -q')
                 os.system('pip install pysimplegui -q')
