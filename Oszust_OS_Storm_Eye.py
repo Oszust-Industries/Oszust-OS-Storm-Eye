@@ -1,6 +1,6 @@
 ## Oszust OS Storm Eye - Oszust Industries
-## Created on: 12-16-21 - Last update: 4-12-21
-softwareVersion = "ALPHA-v1.1.0.005"
+## Created on: 12-16-21 - Last update: 4-14-21
+softwareVersion = "ALPHA-v1.1.0.007"
 def clear(): return ("\n" * 70)
 from win32com.shell import shell, shellcon
 import datetime, json, os, pathlib, pickle, threading, urllib.request
